@@ -256,7 +256,7 @@ button { font-family: inherit; cursor: pointer; }
    DERECELER
 ====================================================================== */
 .honors { justify-content: flex-start; padding-top: 4vmin; }
-.honors-head { margin-bottom: 7.5vmin; }
+.honors-head { margin-bottom: 8.5vmin; }
 .h-eyebrow { font: 600 clamp(.9rem, 2vmin, 1.3rem) var(--sans); letter-spacing: .26em; text-transform: uppercase; color: var(--gold); }
 .h-program { font: 800 clamp(2.2rem, 6.9vmin, 5.3rem) var(--serif); color: var(--offwhite); line-height: 1.08; margin-top: .6vmin; }
 .h-dept { font: 400 clamp(.95rem, 2.2vmin, 1.4rem) var(--sans); color: rgba(246,241,231,0.7); margin-top: .6vmin; }
@@ -265,6 +265,7 @@ button { font-family: inherit; cursor: pointer; }
 .honor-card { position: relative; display: flex; flex-direction: column; align-items: center; width: clamp(215px, 32vmin, 380px); opacity: 0; transform-origin: bottom center; animation: cardIn .7s cubic-bezier(.2,.7,.2,1) both; }
 .honor-card.r1 { animation-name: cardInR1; }
 .honor-card.r2 { animation-name: cardInR2; }
+.honor-card.r3 { animation-name: cardInR3; }
 .honor-row .honor-card:nth-child(1) { animation-delay: .05s; }
 .honor-row .honor-card:nth-child(2) { animation-delay: .2s; }
 .honor-row .honor-card:nth-child(3) { animation-delay: .35s; }
@@ -290,10 +291,11 @@ button { font-family: inherit; cursor: pointer; }
   box-shadow: 0 18px 50px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(255,255,255,0.06);
   background: var(--bordo-deep);
 }
-/* podyum basamağı: 1. en yüksek ve büyük · 2. orta · 3. en alçak */
-.honor-card.r1 { transform: translateY(-5.5vmin) scale(1.08); }
-.honor-card.r2 { transform: translateY(-1.8vmin); }
-.honor-card.r3 { transform: translateY(0); }
+/* podyum basamağı: 1. yukarıda ve büyük · 2. ortada · 3. belirgin aşağıda.
+   Beraberlik (iki 1./2./3.) aynı sınıf → aynı yükseklik → yan yana hizalı. */
+.honor-card.r1 { transform: translateY(-2.8vmin) scale(1.06); }
+.honor-card.r2 { transform: translateY(0); }
+.honor-card.r3 { transform: translateY(1.8vmin); }
 
 /* zemin ışığı / spot — madalya rengine göre */
 .honor-card::after {
@@ -357,9 +359,11 @@ button { font-family: inherit; cursor: pointer; }
 .honor-card.r1 .honor-label { color: var(--gold-2); }
 .honor-card.r2 .honor-label { color: var(--silver-2); }
 .honor-card.r3 .honor-label { color: var(--bronze-2); }
-.honor-name { font: 700 clamp(1.25rem, 3.2vmin, 2.3rem) var(--serif); color: var(--offwhite); margin-top: .7vmin; line-height: 1.12; min-height: 1.1em; }
+/* isim/program alanına 2 satırlık sabit yer ayır: kartlar eşit boyda kalsın,
+   böylece beraberlikte (iki 2.'lik) fotoğraflar aynı hizada durur. */
+.honor-name { font: 700 clamp(1.25rem, 3.2vmin, 2.3rem) var(--serif); color: var(--offwhite); margin-top: .7vmin; line-height: 1.12; min-height: 2.24em; display: flex; align-items: flex-start; justify-content: center; }
 .honor-name.empty { color: rgba(246,241,231,0.4); }
-.honor-program-tag { font: 500 clamp(.85rem, 1.9vmin, 1.2rem) var(--sans); color: rgba(246,241,231,0.62); margin-top: .4vmin; line-height: 1.15; }
+.honor-program-tag { font: 500 clamp(.85rem, 1.9vmin, 1.2rem) var(--sans); color: rgba(246,241,231,0.62); margin-top: .4vmin; line-height: 1.15; min-height: 2.3em; }
 
 /* ======================================================================
    KAPANIŞ
@@ -559,8 +563,9 @@ button { font-family: inherit; cursor: pointer; }
 @keyframes drawRule { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 @keyframes popIn    { from { opacity: 0; transform: scale(.85); } to { opacity: 1; transform: scale(1); } }
 @keyframes cardIn   { from { opacity: 0; transform: perspective(1400px) translateY(34px) rotateX(16deg) scale(.95); } to { opacity: 1; transform: perspective(1400px) translateY(0) rotateX(0) scale(1); } }
-@keyframes cardInR1 { from { opacity: 0; transform: perspective(1400px) translateY(34px) rotateX(16deg) scale(.95); } to { opacity: 1; transform: perspective(1400px) translateY(-5.5vmin) rotateX(0) scale(1.08); } }
-@keyframes cardInR2 { from { opacity: 0; transform: perspective(1400px) translateY(34px) rotateX(16deg) scale(.95); } to { opacity: 1; transform: perspective(1400px) translateY(-1.8vmin) rotateX(0) scale(1); } }
+@keyframes cardInR1 { from { opacity: 0; transform: perspective(1400px) translateY(34px) rotateX(16deg) scale(.95); } to { opacity: 1; transform: perspective(1400px) translateY(-2.8vmin) rotateX(0) scale(1.06); } }
+@keyframes cardInR2 { from { opacity: 0; transform: perspective(1400px) translateY(34px) rotateX(16deg) scale(.95); } to { opacity: 1; transform: perspective(1400px) translateY(0) rotateX(0) scale(1); } }
+@keyframes cardInR3 { from { opacity: 0; transform: perspective(1400px) translateY(34px) rotateX(16deg) scale(.95); } to { opacity: 1; transform: perspective(1400px) translateY(1.8vmin) rotateX(0) scale(1); } }
 @keyframes shimmer  { 0% { left: -120%; } 55%, 100% { left: 140%; } }
 @keyframes kb1 { from { transform: scale(1.00) translate(0,0); }     to { transform: scale(1.13) translate(-2%,-1.5%); } }
 @keyframes kb2 { from { transform: scale(1.12) translate(2%,1%); }    to { transform: scale(1.00) translate(0,0); } }
