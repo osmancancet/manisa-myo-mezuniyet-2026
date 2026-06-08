@@ -8,7 +8,7 @@ export default function IntroScreen() {
   return (
     <motion.section className="screen intro" variants={screenVariants} initial="initial" animate="animate" exit="exit">
       <div className="intro-university">{s.university}</div>
-      <h1 className="intro-school">Teknik Bilimler<br />Meslek Yüksekokulu</h1>
+      <h1 className="intro-school">Manisa Teknik Bilimler<br />Meslek Yüksekokulu</h1>
       <div className="gold-rule" />
       <div className="intro-title">{s.introTitle}</div>
       <div className="intro-subtitle">{s.introSubtitle}</div>

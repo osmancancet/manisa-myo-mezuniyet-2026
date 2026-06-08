@@ -65,7 +65,7 @@ export default function ProcessionScreen({ program, index, total }) {
           <div className="kb-empty">
             <div className="kb-empty-mark">
               <div className="kb-empty-uni">{CEREMONY_DATA.school.university}</div>
-              <div className="kb-empty-school">Teknik Bilimler Meslek Yüksekokulu</div>
+              <div className="kb-empty-school">Manisa Teknik Bilimler Meslek Yüksekokulu</div>
             </div>
           </div>
         )}

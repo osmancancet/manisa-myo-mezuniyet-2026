@@ -290,6 +290,18 @@ button { font-family: inherit; cursor: pointer; }
   background: var(--bordo-deep);
 }
 .honor-card.r1 { transform: translateY(-3vmin); }
+.honor-card.r2 { transform: translateY(-1.2vmin); }
+
+/* zemin ışığı / spot — madalya rengine göre */
+.honor-card::after {
+  content: ""; position: absolute; left: 50%; bottom: -3vmin; transform: translateX(-50%);
+  width: 80%; height: 2.6vmin; border-radius: 50%; z-index: 0; pointer-events: none;
+  background: radial-gradient(ellipse at center, rgba(205,210,217,0.45), transparent 72%);
+  filter: blur(5px);
+}
+.honor-card.r1::after { width: 92%; background: radial-gradient(ellipse at center, rgba(241,200,75,0.6), transparent 72%); }
+.honor-card.r3::after { background: radial-gradient(ellipse at center, rgba(205,127,50,0.5), transparent 72%); }
+
 .honor-card.r1 .honor-photo-wrap {
   border-color: var(--gold-2);
   box-shadow: 0 22px 60px rgba(0,0,0,0.6), 0 0 0 3px rgba(241,200,75,0.3), 0 0 44px rgba(241,200,75,0.35);
