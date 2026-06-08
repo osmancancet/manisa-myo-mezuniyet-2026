@@ -60,7 +60,7 @@ button { font-family: inherit; cursor: pointer; }
 }
 /* flex (align-items:center) içinde başlıkların taşmadan sarması için */
 .intro-university, .intro-school, .intro-title, .intro-subtitle,
-.closing-title, .closing-message, .closing-eyebrow, .closing-subtitle,
+.closing-title, .closing-message, .closing-eyebrow, .closing-subtitle, .closing-school,
 .proc-program, .proc-dept, .h-program, .h-dept,
 .party-title, .party-eyebrow, .honors-empty-note { width: 100%; min-width: 0; overflow-wrap: break-word; }
 
@@ -320,14 +320,16 @@ button { font-family: inherit; cursor: pointer; }
   background: radial-gradient(circle, rgba(237,75,92,0.14), rgba(237,75,92,0.04) 45%, transparent 65%);
   z-index: -1; pointer-events: none; animation: glowPulse 4.5s ease-in-out infinite;
 }
-.closing-eyebrow { font: 600 clamp(0.85rem, 2vmin, 1.3rem) var(--sans); letter-spacing: .34em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.6vmin; padding-left: .34em; animation: fadeUp 1s ease .1s both; }
+.closing-eyebrow { font: 600 clamp(0.78rem, 1.8vmin, 1.2rem) var(--sans); letter-spacing: .3em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.6vmin; padding-left: .3em; animation: fadeUp 1s ease .1s both; }
+.closing-school { font: 600 clamp(1.1rem, 2.8vmin, 2rem) var(--serif); color: var(--offwhite); letter-spacing: .02em; margin-bottom: 1.4vmin; animation: fadeUp 1s ease .2s both; }
 .closing-title {
-  font: 800 clamp(2.8rem, 11vmin, 8.6rem) var(--serif);
+  font: 800 clamp(2.8rem, 10vmin, 7.6rem) var(--serif);
+  white-space: pre-line;
   background: linear-gradient(100deg, var(--cream) 22%, #FFFFFF 50%, var(--cream) 78%);
   background-size: 230% 100%;
   -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent; color: transparent;
-  filter: drop-shadow(0 6px 34px rgba(0,0,0,0.5)); line-height: 1.05;
+  filter: drop-shadow(0 6px 34px rgba(0,0,0,0.5)); line-height: 1.12;
   animation: popIn 1s cubic-bezier(.2,.8,.2,1) .35s both, titleShine 6s ease-in-out 1.6s infinite;
 }
 .closing-subtitle { font: 400 clamp(1.1rem, 3.2vmin, 2.2rem) var(--sans); color: var(--offwhite); margin-top: 2vmin; letter-spacing: .05em; animation: fadeUp 1s ease .9s both; }
@@ -523,8 +525,9 @@ button { font-family: inherit; cursor: pointer; }
   .honors-empty-note { font-size: clamp(.9rem, 4vw, 1.3rem); }
 
   /* kapanış */
-  .closing-eyebrow { font-size: clamp(.78rem, 3.4vw, 1.1rem); }
-  .closing-title { font-size: clamp(2.2rem, 12.5vw, 4.2rem); }
+  .closing-eyebrow { font-size: clamp(.68rem, 3vw, 1rem); letter-spacing: .2em; }
+  .closing-school { font-size: clamp(1rem, 5vw, 1.6rem); }
+  .closing-title { font-size: clamp(2.2rem, 12vw, 4rem); }
   .closing-subtitle { font-size: clamp(1rem, 4.6vw, 1.6rem); }
   .closing-cta { font-size: clamp(.82rem, 3.6vw, 1.1rem); }
 

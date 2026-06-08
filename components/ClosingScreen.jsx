@@ -13,7 +13,8 @@ export default function ClosingScreen() {
   }, []);
   return (
     <motion.section className="screen closing" variants={screenVariants} initial="initial" animate="animate" exit="exit">
-      <div className="closing-eyebrow">{s.shortName}</div>
+      <div className="closing-eyebrow">{s.university}</div>
+      <div className="closing-school">Teknik Bilimler Meslek Yüksekokulu</div>
       <div className="gold-rule" />
       <div className="closing-title">{s.closingTitle}</div>
       <div className="closing-message">{s.closingMessage}</div>
