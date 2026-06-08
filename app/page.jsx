@@ -8,6 +8,7 @@ import ProcessionScreen from "@/components/ProcessionScreen";
 import HonorsScreen from "@/components/HonorsScreen";
 import ClosingScreen from "@/components/ClosingScreen";
 import PartyScreen from "@/components/PartyScreen";
+import CountdownScreen from "@/components/CountdownScreen";
 
 const N = ACTIVE_PROGRAMS.length;   // yürüyüş: program sayısı
 const ND = HONORS.length;           // dereceler: bölüm/grup sayısı
@@ -18,17 +19,20 @@ export default function Page() {
   const [honor, setHonor] = useState(0);
   const [blackout, setBlackout] = useState(false);
   const [help, setHelp] = useState(false);
+  const [countdown, setCountdown] = useState(false);
+  const [autoToClosing, setAutoToClosing] = useState(false); // geri sayım kapanınca Kapanış'a geç
   const lastNav = useRef(0);
 
-  const stateRef = useRef({ screen, proc, honor, help });
-  stateRef.current = { screen, proc, honor, help };
+  const stateRef = useRef({ screen, proc, honor, help, countdown });
+  stateRef.current = { screen, proc, honor, help, countdown };
 
   const next = useCallback(() => {
     const s = stateRef.current;
     if (s.help) { setHelp(false); return; }
     if (s.screen === 0) setScreen(1);
     else if (s.screen === 1) { if (s.proc < N - 1) setProc(s.proc + 1); else { setHonor(0); setScreen(2); } }
-    else if (s.screen === 2) { if (s.honor < ND - 1) setHonor(s.honor + 1); else setScreen(3); }
+    else if (s.screen === 2) { if (s.honor < ND - 1) setHonor(s.honor + 1); else { setAutoToClosing(true); setCountdown(true); } } // Dereceler bitti → kep atma geri sayımı, sonra Kapanış
+
     else if (s.screen === 3) setScreen(4);
   }, []);
 
@@ -68,6 +72,8 @@ export default function Page() {
   useEffect(() => {
     function onKey(e) {
       const k = e.key;
+      if (stateRef.current.countdown) return; // geri sayım açıkken tuşları CountdownScreen yönetir
+      if (k === "c" || k === "C") { e.preventDefault(); setCountdown(true); return; }
       if (k === "ArrowRight" || k === " " || k === "PageDown" || k === "Enter") { e.preventDefault(); navNext(); }
       else if (k === "ArrowLeft" || k === "PageUp") { e.preventDefault(); navPrev(); }
       else if (k.length === 1 && k >= "1" && k <= "5") { jump(parseInt(k, 10) - 1); }
@@ -105,6 +111,7 @@ export default function Page() {
 
   function onStageClick(e) {
     const t = e.target;
+    if (stateRef.current.countdown) return; // tıklamayı CountdownScreen yönetir
     if (t.closest(".nav-arrow") || t.closest(".help-box") || t.closest(".player-area")) return;
     if (stateRef.current.help) { setHelp(false); return; }
     navNext();
@@ -136,8 +143,15 @@ export default function Page() {
 
       {screen === 0 && (
         <div className="hint">
-          <kbd>→</kbd> İleri &nbsp; <kbd>←</kbd> Geri &nbsp; <kbd>F</kbd> Tam Ekran &nbsp; <kbd>H</kbd> Yardım
+          <kbd>→</kbd> İleri &nbsp; <kbd>←</kbd> Geri &nbsp; <kbd>C</kbd> Geri Sayım + Şarkı &nbsp; <kbd>F</kbd> Tam Ekran &nbsp; <kbd>H</kbd> Yardım
         </div>
+      )}
+
+      {countdown && (
+        <CountdownScreen
+          from={10}
+          onClose={() => { setCountdown(false); if (autoToClosing) { setAutoToClosing(false); setScreen(3); } }}
+        />
       )}
 
       {blackout && <div className="blackout" />}
@@ -151,6 +165,9 @@ export default function Page() {
                 <tr><td><kbd>→</kbd> / <kbd>Boşluk</kbd> / tıklama</td><td>İleri</td></tr>
                 <tr><td><kbd>←</kbd></td><td>Geri</td></tr>
                 <tr><td><kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> <kbd>4</kbd> <kbd>5</kbd></td><td>Açılış / Yürüyüş / Dereceler / Kapanış / Kutlama</td></tr>
+                <tr><td>Dereceler bitince</td><td>Geri sayım + kep atma şarkısı (We Are the Champions) <b>otomatik</b> açılır; kapanınca "Yolunuz Açık Olsun"a geçer</td></tr>
+                <tr><td><kbd>C</kbd></td><td>Geri sayımı elle başlat (yedek)</td></tr>
+                <tr><td><kbd>M</kbd></td><td>Geri sayım sırasında şarkıyı sustur / aç</td></tr>
                 <tr><td><kbd>F</kbd></td><td>Tam ekran aç/kapat</td></tr>
                 <tr><td><kbd>B</kbd></td><td>Ekranı karart</td></tr>
                 <tr><td><kbd>H</kbd> / <kbd>?</kbd></td><td>Bu yardımı aç/kapat</td></tr>

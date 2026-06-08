@@ -1,0 +1,17 @@
+GERİ SAYIM / KEP ATMA ŞARKISI — internetsiz garanti çalması için
+=================================================================
+
+Tek yapman gereken: elindeki şarkı dosyasını bu klasöre tam olarak şu adla koymak:
+
+    champions.mp3
+
+Yani tam yol:  public/music/champions.mp3
+
+• Dosya buradaysa: geri sayım açılınca İNTERNETSİZ bu dosyadan çalar (garanti).
+• Dosya yoksa:     otomatik olarak YouTube'dan (sadece ses) çalmayı dener (internet gerekir).
+
+Not:
+- Sadece .mp3 adını "champions.mp3" yap; başka isim olursa bulamaz.
+- Başka bir parça koymak istersen yine "champions.mp3" adıyla kaydet,
+  ya da lib/data.js içindeki MUSIC.anthem.file yolunu değiştir.
+- Bu .txt dosyasını silebilirsin; sadece hatırlatma için duruyor.
