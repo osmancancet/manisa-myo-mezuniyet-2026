@@ -8,10 +8,19 @@ import { burst } from "@/lib/confetti";
 const LABELS = { 1: "Birinci", 2: "İkinci", 3: "Üçüncü", 4: "Dördüncü" };
 const PLACEHOLDER = [{ rank: 1 }, { rank: 2 }, { rank: 3 }];
 
+// Podyum yerleşimi: 2. solda — 1. ortada (yüksekte) — 3. sağda. Beraberlikler yan yana.
+const PODIUM = { 1: 1, 2: 0, 3: 2 };
+function toPodium(list) {
+  return list
+    .map((h, i) => ({ h, i }))
+    .sort((a, b) => ((PODIUM[a.h.rank] ?? a.h.rank + 1) - (PODIUM[b.h.rank] ?? b.h.rank + 1)) || (a.i - b.i))
+    .map((x) => x.h);
+}
+
 export default function HonorsScreen({ group, index, total }) {
   const rowRef = useRef(null);
   const empty = !(group.honors && group.honors.length);
-  const honors = empty ? PLACEHOLDER : group.honors;
+  const honors = toPodium(empty ? PLACEHOLDER : group.honors);
   const isSchool = group.key === "okul";
 
   useEffect(() => {

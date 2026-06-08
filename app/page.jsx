@@ -124,6 +124,10 @@ export default function Page() {
   return (
     <main onClick={onStageClick}>
       <Ambient />
+
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img className="brand-logo" src="/assets/logo-corner.png" alt="Manisa Celal Bayar Üniversitesi — Teknik Bilimler MYO" />
+
       <AnimatePresence>{renderScreen()}</AnimatePresence>
 
 
