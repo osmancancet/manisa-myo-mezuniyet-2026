@@ -60,6 +60,14 @@ export default function Page() {
     else { (d.exitFullscreen || d.webkitExitFullscreen || (() => {})).call(d); }
   }
 
+  // YouTube ses motorunu önceden yükle: geri sayım/şarkı açılınca beklemeden başlasın
+  useEffect(() => {
+    if (document.getElementById("yt-iframe-api")) return;
+    const s = document.createElement("script");
+    s.id = "yt-iframe-api"; s.src = "https://www.youtube.com/iframe_api";
+    document.body.appendChild(s);
+  }, []);
+
   useEffect(() => {
     let wl = null;
     const reqWake = () => { if (navigator.wakeLock) navigator.wakeLock.request("screen").then((l) => { wl = l; }).catch(() => {}); };

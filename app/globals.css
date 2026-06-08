@@ -256,13 +256,15 @@ button { font-family: inherit; cursor: pointer; }
    DERECELER
 ====================================================================== */
 .honors { justify-content: flex-start; padding-top: 4vmin; }
-.honors-head { margin-bottom: 8.5vmin; }
+.honors-head { margin-bottom: 3vmin; }
 .h-eyebrow { font: 600 clamp(.9rem, 2vmin, 1.3rem) var(--sans); letter-spacing: .26em; text-transform: uppercase; color: var(--gold); }
 .h-program { font: 800 clamp(2.2rem, 6.9vmin, 5.3rem) var(--serif); color: var(--offwhite); line-height: 1.08; margin-top: .6vmin; }
 .h-dept { font: 400 clamp(.95rem, 2.2vmin, 1.4rem) var(--sans); color: rgba(246,241,231,0.7); margin-top: .6vmin; }
 
-.honor-row { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: center; gap: 2.6vmin; width: 100%; max-width: 1760px; margin-top: 1vmin; perspective: 1400px; }
-.honor-card { position: relative; display: flex; flex-direction: column; align-items: center; width: clamp(215px, 32vmin, 380px); opacity: 0; transform-origin: bottom center; animation: cardIn .7s cubic-bezier(.2,.7,.2,1) both; }
+/* padding-top: rozetler fotoğrafın üstünde durduğundan, başlığa taşmasınlar diye
+   satırın tepesinde onlara ayrılmış boşluk. */
+.honor-row { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: center; gap: 2.6vmin; width: 100%; max-width: 1760px; margin-top: 1vmin; padding-top: 11vmin; perspective: 1400px; }
+.honor-card { position: relative; display: flex; flex-direction: column; align-items: center; width: clamp(200px, 29vmin, 350px); opacity: 0; transform-origin: bottom center; animation: cardIn .7s cubic-bezier(.2,.7,.2,1) both; }
 .honor-card.r1 { animation-name: cardInR1; }
 .honor-card.r2 { animation-name: cardInR2; }
 .honor-card.r3 { animation-name: cardInR3; }
@@ -295,7 +297,7 @@ button { font-family: inherit; cursor: pointer; }
    Beraberlik (iki 1./2./3.) aynı sınıf → aynı yükseklik → yan yana hizalı. */
 .honor-card.r1 { transform: translateY(-2.8vmin) scale(1.06); }
 .honor-card.r2 { transform: translateY(0); }
-.honor-card.r3 { transform: translateY(1.8vmin); }
+.honor-card.r3 { transform: translateY(3.6vmin); }
 
 /* zemin ışığı / spot — madalya rengine göre */
 .honor-card::after {
@@ -565,7 +567,7 @@ button { font-family: inherit; cursor: pointer; }
 @keyframes cardIn   { from { opacity: 0; transform: perspective(1400px) translateY(34px) rotateX(16deg) scale(.95); } to { opacity: 1; transform: perspective(1400px) translateY(0) rotateX(0) scale(1); } }
 @keyframes cardInR1 { from { opacity: 0; transform: perspective(1400px) translateY(34px) rotateX(16deg) scale(.95); } to { opacity: 1; transform: perspective(1400px) translateY(-2.8vmin) rotateX(0) scale(1.06); } }
 @keyframes cardInR2 { from { opacity: 0; transform: perspective(1400px) translateY(34px) rotateX(16deg) scale(.95); } to { opacity: 1; transform: perspective(1400px) translateY(0) rotateX(0) scale(1); } }
-@keyframes cardInR3 { from { opacity: 0; transform: perspective(1400px) translateY(34px) rotateX(16deg) scale(.95); } to { opacity: 1; transform: perspective(1400px) translateY(1.8vmin) rotateX(0) scale(1); } }
+@keyframes cardInR3 { from { opacity: 0; transform: perspective(1400px) translateY(34px) rotateX(16deg) scale(.95); } to { opacity: 1; transform: perspective(1400px) translateY(3.6vmin) rotateX(0) scale(1); } }
 @keyframes shimmer  { 0% { left: -120%; } 55%, 100% { left: 140%; } }
 @keyframes kb1 { from { transform: scale(1.00) translate(0,0); }     to { transform: scale(1.13) translate(-2%,-1.5%); } }
 @keyframes kb2 { from { transform: scale(1.12) translate(2%,1%); }    to { transform: scale(1.00) translate(0,0); } }
