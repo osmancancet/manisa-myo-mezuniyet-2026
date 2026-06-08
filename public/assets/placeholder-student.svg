@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" width="400" height="500">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8d1438"/>
+      <stop offset="1" stop-color="#5C0A22"/>
+    </linearGradient>
+    <linearGradient id="sil" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#C9A24B" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#C9A24B" stop-opacity="0.30"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="500" fill="url(#bg)"/>
+  <g fill="url(#sil)">
+    <circle cx="200" cy="185" r="78"/>
+    <path d="M200 285c-86 0-150 54-150 140v75h300v-75c0-86-64-140-150-140z"/>
+  </g>
+  <!-- mezuniyet kepi -->
+  <g fill="#C9A24B" opacity="0.85">
+    <path d="M200 96 322 140 200 184 78 140z"/>
+    <path d="M120 158v44c0 18 36 33 80 33s80-15 80-33v-44l-80 29z" fill="#5C0A22"/>
+    <rect x="318" y="138" width="5" height="60"/>
+    <circle cx="320" cy="202" r="9"/>
+  </g>
+</svg>

@@ -1,0 +1,16 @@
+# bağımlılıklar
+/node_modules
+
+# next.js build çıktıları (Vercel kendi üretir)
+/.next
+/out
+
+# sistem / log
+.DS_Store
+*.log
+npm-debug.log*
+
+# deploy'a GEREKMEYEN dosyalar (yerelde kalır)
+/_statik-yedek
+/fotograflar
+Derece iletişim.pdf
