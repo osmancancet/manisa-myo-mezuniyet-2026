@@ -9,7 +9,6 @@ import HonorsScreen from "@/components/HonorsScreen";
 import ClosingScreen from "@/components/ClosingScreen";
 import PartyScreen from "@/components/PartyScreen";
 
-const SECTIONS = ["Açılış", "Yürüyüş", "Dereceler", "Kapanış", "Kutlama"];
 const N = ACTIVE_PROGRAMS.length;   // yürüyüş: program sayısı
 const ND = HONORS.length;           // dereceler: bölüm/grup sayısı
 
@@ -127,9 +126,6 @@ export default function Page() {
       <Ambient />
       <AnimatePresence>{renderScreen()}</AnimatePresence>
 
-      <nav className="section-indicator">
-        {SECTIONS.map((s, i) => (<span key={s} className={`dot${i === screen ? " active" : ""}`}>{s}</span>))}
-      </nav>
 
       <div className="nav-arrow prev" title="Geri (←)" onClick={(e) => { e.stopPropagation(); navPrev(); }}>‹</div>
       <div className="nav-arrow next" title="İleri (→)" onClick={(e) => { e.stopPropagation(); navNext(); }}>›</div>
