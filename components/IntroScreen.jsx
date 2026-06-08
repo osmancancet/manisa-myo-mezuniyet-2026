@@ -12,6 +12,10 @@ export default function IntroScreen() {
       <div className="gold-rule" />
       <div className="intro-title">{s.introTitle}</div>
       <div className="intro-subtitle">{s.introSubtitle}</div>
+      <div className="intro-quote">
+        “{s.quote}”
+        <span className="intro-quote-author">— {s.quoteAuthor}</span>
+      </div>
     </motion.section>
   );
 }

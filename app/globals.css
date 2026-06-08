@@ -4,13 +4,24 @@
 ============================================================================ */
 
 :root {
-  --bordo:        #7A0C2E;
-  --bordo-deep:   #5C0A22;
-  --bordo-bright: #A6133E;
-  --gold:         #C9A24B;
-  --gold-bright:  #E7C66B;
-  --offwhite:     #F6F1E7;
-  --ink:          #2A0A14;
+  /* MCBÜ logosu — lacivert + kırmızı */
+  --navy:        #11305F;
+  --navy-deep:   #0A1E3D;
+  --navy-bright: #1E4E8C;
+  --blue:        #2E7BC4;
+  --red:         #D02233;
+  --red-bright:  #ED4B5C;
+  --red-deep:    #8E1622;
+  --cream:       #F4F1EA;
+
+  /* eski isimler yeni palete eşlenir (mevcut kullanımlar otomatik döner) */
+  --bordo:        var(--navy);
+  --bordo-deep:   var(--navy-deep);
+  --bordo-bright: var(--navy-bright);
+  --gold:         var(--red);
+  --gold-bright:  var(--red-bright);
+  --offwhite:     var(--cream);
+  --ink:          #0A1424;
 
   --serif: var(--font-playfair), Georgia, "Times New Roman", "Noto Serif", serif;
   --sans:  var(--font-inter), system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -29,10 +40,10 @@ html, body {
 body {
   position: relative;
   background:
-    radial-gradient(120% 90% at 50% 8%, rgba(166,19,62,0.55) 0%, rgba(122,12,46,0.0) 55%),
-    repeating-linear-gradient(135deg, rgba(201,162,75,0.05) 0 2px, transparent 2px 22px),
-    radial-gradient(140% 120% at 50% 120%, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 60%),
-    linear-gradient(160deg, #7A0C2E 0%, #5C0A22 60%, #4A0719 100%);
+    radial-gradient(120% 90% at 50% 8%, rgba(30,78,140,0.48) 0%, rgba(17,48,95,0.0) 55%),
+    repeating-linear-gradient(135deg, rgba(208,34,51,0.05) 0 2px, transparent 2px 22px),
+    radial-gradient(140% 120% at 50% 120%, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 60%),
+    linear-gradient(160deg, #11305F 0%, #0A1E3D 60%, #07152C 100%);
   user-select: none;
 }
 
@@ -47,6 +58,11 @@ button { font-family: inherit; cursor: pointer; }
   text-align: center;
   padding: 6vmin;
 }
+/* flex (align-items:center) içinde başlıkların taşmadan sarması için */
+.intro-university, .intro-school, .intro-title, .intro-subtitle,
+.closing-title, .closing-message, .closing-eyebrow, .closing-subtitle,
+.proc-program, .proc-dept, .h-program, .h-dept,
+.party-title, .party-eyebrow, .honors-empty-note { width: 100%; min-width: 0; overflow-wrap: break-word; }
 
 /* ---------- Üst bölüm göstergesi --------------------------------------- */
 .section-indicator {
@@ -78,7 +94,7 @@ button { font-family: inherit; cursor: pointer; }
   width: 7vmin; height: 7vmin; min-width: 52px; min-height: 52px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   background: rgba(0,0,0,0.25); color: var(--gold-bright);
-  border: 1px solid rgba(201,162,75,0.35);
+  border: 1px solid rgba(208,34,51,0.35);
   font-size: 3.4vmin; opacity: 0.35;
   transition: opacity .3s ease, background .3s ease, transform .2s ease;
 }
@@ -94,8 +110,8 @@ button { font-family: inherit; cursor: pointer; }
   transition: opacity .5s ease;
 }
 .hint kbd, .help-box kbd {
-  font-family: var(--sans); background: rgba(201,162,75,0.18);
-  border: 1px solid rgba(201,162,75,0.4); border-radius: 4px;
+  font-family: var(--sans); background: rgba(208,34,51,0.18);
+  border: 1px solid rgba(208,34,51,0.4); border-radius: 4px;
   padding: 0.2em 0.5em; color: var(--gold-bright);
 }
 
@@ -105,7 +121,7 @@ button { font-family: inherit; cursor: pointer; }
 .ambient { position: fixed; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
 .ambient .p {
   position: absolute; bottom: -6vmin; border-radius: 50%; opacity: 0;
-  background: radial-gradient(circle at 35% 30%, var(--gold-bright), rgba(201,162,75,0.18) 60%, transparent 72%);
+  background: radial-gradient(circle at 35% 30%, var(--gold-bright), rgba(208,34,51,0.18) 60%, transparent 72%);
   animation-name: floatUp; animation-timing-function: linear; animation-iteration-count: infinite;
   will-change: transform, opacity;
 }
@@ -117,14 +133,14 @@ button { font-family: inherit; cursor: pointer; }
   content: ""; position: absolute; left: 50%; top: 44%;
   width: 150vmin; height: 150vmin; transform: translate(-50%, -50%);
   background: conic-gradient(from 0deg,
-    transparent 0 8deg, rgba(231,198,107,0.10) 12deg, transparent 16deg,
-    transparent 30deg, rgba(231,198,107,0.06) 34deg, transparent 38deg,
-    transparent 56deg, rgba(231,198,107,0.10) 60deg, transparent 64deg,
-    transparent 86deg, rgba(231,198,107,0.06) 90deg, transparent 94deg,
-    transparent 118deg, rgba(231,198,107,0.10) 122deg, transparent 126deg,
-    transparent 180deg, rgba(231,198,107,0.07) 184deg, transparent 188deg,
-    transparent 240deg, rgba(231,198,107,0.09) 244deg, transparent 248deg,
-    transparent 300deg, rgba(231,198,107,0.07) 304deg, transparent 308deg);
+    transparent 0 8deg, rgba(237,75,92,0.10) 12deg, transparent 16deg,
+    transparent 30deg, rgba(237,75,92,0.06) 34deg, transparent 38deg,
+    transparent 56deg, rgba(237,75,92,0.10) 60deg, transparent 64deg,
+    transparent 86deg, rgba(237,75,92,0.06) 90deg, transparent 94deg,
+    transparent 118deg, rgba(237,75,92,0.10) 122deg, transparent 126deg,
+    transparent 180deg, rgba(237,75,92,0.07) 184deg, transparent 188deg,
+    transparent 240deg, rgba(237,75,92,0.09) 244deg, transparent 248deg,
+    transparent 300deg, rgba(237,75,92,0.07) 304deg, transparent 308deg);
   -webkit-mask: radial-gradient(circle, #000 0%, rgba(0,0,0,0.55) 32%, transparent 64%);
           mask: radial-gradient(circle, #000 0%, rgba(0,0,0,0.55) 32%, transparent 64%);
   animation: spin 60s linear infinite; z-index: -1; pointer-events: none;
@@ -148,7 +164,7 @@ button { font-family: inherit; cursor: pointer; }
 }
 .intro-title {
   font: 800 clamp(2.6rem, 9.6vmin, 7.6rem) var(--serif);
-  background: linear-gradient(100deg, var(--gold) 25%, #fff4cf 50%, var(--gold) 75%);
+  background: linear-gradient(100deg, var(--cream) 22%, #FFFFFF 50%, var(--cream) 78%);
   background-size: 230% 100%;
   -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent; color: transparent;
@@ -159,6 +175,16 @@ button { font-family: inherit; cursor: pointer; }
   font: 400 clamp(1.15rem, 3.2vmin, 2.1rem) var(--sans);
   color: rgba(246,241,231,0.8); margin-top: 1.6vmin; letter-spacing: .04em;
   animation: fadeUp .6s ease 1.0s both;
+}
+.intro-quote {
+  max-width: 60ch; margin-top: 3vmin; padding: 0 4vmin;
+  font: italic 400 clamp(.92rem, 2.1vmin, 1.45rem) var(--serif);
+  color: rgba(244,241,234,0.78); line-height: 1.55;
+  animation: fadeUp .7s ease 1.3s both;
+}
+.intro-quote-author {
+  display: block; margin-top: 1.1vmin; font: 600 clamp(.78rem, 1.8vmin, 1.1rem) var(--sans);
+  font-style: normal; letter-spacing: .14em; text-transform: uppercase; color: var(--red-bright);
 }
 
 /* ======================================================================
@@ -178,7 +204,7 @@ button { font-family: inherit; cursor: pointer; }
 .kb-empty {
   position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
   background:
-    repeating-linear-gradient(45deg, rgba(201,162,75,0.06) 0 3px, transparent 3px 26px),
+    repeating-linear-gradient(45deg, rgba(208,34,51,0.06) 0 3px, transparent 3px 26px),
     radial-gradient(80% 80% at 50% 40%, var(--bordo-bright), var(--bordo-deep));
 }
 .kb-empty-mark { text-align: center; opacity: 0.92; padding: 0 6vmin; }
@@ -217,14 +243,14 @@ button { font-family: inherit; cursor: pointer; }
 /* ======================================================================
    DERECELER
 ====================================================================== */
-.honors { justify-content: flex-start; padding-top: 6.5vmin; }
-.honors-head { margin-bottom: 3.5vmin; }
+.honors { justify-content: flex-start; padding-top: 4vmin; }
+.honors-head { margin-bottom: 7.5vmin; }
 .h-eyebrow { font: 600 clamp(.9rem, 2vmin, 1.3rem) var(--sans); letter-spacing: .26em; text-transform: uppercase; color: var(--gold); }
 .h-program { font: 800 clamp(2.2rem, 6.9vmin, 5.3rem) var(--serif); color: var(--offwhite); line-height: 1.08; margin-top: .6vmin; }
 .h-dept { font: 400 clamp(.95rem, 2.2vmin, 1.4rem) var(--sans); color: rgba(246,241,231,0.7); margin-top: .6vmin; }
 
-.honor-row { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: center; gap: 2.6vmin; width: 100%; max-width: 1500px; margin-top: 1vmin; perspective: 1400px; }
-.honor-card { position: relative; display: flex; flex-direction: column; align-items: center; width: clamp(185px, 22.5vmin, 320px); opacity: 0; animation: cardIn .7s cubic-bezier(.2,.7,.2,1) both; }
+.honor-row { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: center; gap: 2.6vmin; width: 100%; max-width: 1760px; margin-top: 1vmin; perspective: 1400px; }
+.honor-card { position: relative; display: flex; flex-direction: column; align-items: center; width: clamp(215px, 32vmin, 380px); opacity: 0; animation: cardIn .7s cubic-bezier(.2,.7,.2,1) both; }
 .honor-card.r1 { animation-name: cardInR1; }
 .honor-row .honor-card:nth-child(1) { animation-delay: .05s; }
 .honor-row .honor-card:nth-child(2) { animation-delay: .2s; }
@@ -232,7 +258,7 @@ button { font-family: inherit; cursor: pointer; }
 .honor-row .honor-card:nth-child(4) { animation-delay: .5s; }
 .honor-row .honor-card:nth-child(5) { animation-delay: .65s; }
 .honors-empty-note { position: relative; z-index: 2; margin-top: 4vmin; font: 500 clamp(1rem, 2.4vmin, 1.5rem) var(--sans); color: rgba(246,241,231,0.6); }
-.honors-school .h-program { color: var(--gold-bright); text-shadow: 0 0 28px rgba(201,162,75,0.45); }
+.honors-school .h-program { color: var(--gold-bright); text-shadow: 0 0 28px rgba(208,34,51,0.45); }
 .photo-glow { position: relative; width: 100%; }
 .honor-card.r1 .photo-glow::before {
   content: ""; position: absolute; inset: -8px; border-radius: 20px; z-index: 0;
@@ -248,18 +274,18 @@ button { font-family: inherit; cursor: pointer; }
 .honor-card.r1 { transform: translateY(-3vmin); }
 .honor-card.r1 .honor-photo-wrap {
   border-color: var(--gold-bright);
-  box-shadow: 0 22px 60px rgba(0,0,0,0.6), 0 0 0 3px rgba(231,198,107,0.25), 0 0 40px rgba(201,162,75,0.3);
+  box-shadow: 0 22px 60px rgba(0,0,0,0.6), 0 0 0 3px rgba(237,75,92,0.25), 0 0 40px rgba(208,34,51,0.3);
 }
 .honor-photo-wrap img { width: 100%; height: 100%; object-fit: cover; }
 .rank-badge {
-  position: absolute; top: -2.2vmin; left: 50%; transform: translateX(-50%);
-  width: 6.4vmin; height: 6.4vmin; min-width: 52px; min-height: 52px; border-radius: 50%;
+  position: absolute; left: 50%; bottom: 100%; transform: translateX(-50%); margin-bottom: -0.4vmin;
+  width: 7vmin; height: 7vmin; min-width: 56px; min-height: 56px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  font: 800 3.2vmin/1 var(--serif); color: var(--bordo-deep);
-  background: radial-gradient(circle at 35% 30%, var(--gold-bright), var(--gold) 65%, #9c7a30);
-  border: 3px solid var(--offwhite); box-shadow: 0 6px 18px rgba(0,0,0,0.45); z-index: 2; overflow: hidden;
+  font: 800 3.5vmin/1 var(--serif); color: var(--cream);
+  background: radial-gradient(circle at 35% 30%, var(--red-bright), var(--red) 62%, var(--red-deep));
+  border: 3px solid var(--cream); box-shadow: 0 6px 18px rgba(0,0,0,0.45); z-index: 2; overflow: hidden;
 }
-.honor-card.r1 .rank-badge { width: 7.6vmin; height: 7.6vmin; font-size: 3.8vmin; }
+.honor-card.r1 .rank-badge { width: 8.6vmin; height: 8.6vmin; font-size: 4.2vmin; }
 .rank-badge::after {
   content: ""; position: absolute; top: 0; left: -120%; width: 60%; height: 100%;
   background: linear-gradient(105deg, transparent, rgba(255,255,255,0.85), transparent);
@@ -281,7 +307,7 @@ button { font-family: inherit; cursor: pointer; }
 .spark.s3 { bottom: 14%; left: -4%; animation-delay: 1.1s; }
 .spark.s4 { bottom: 4%; right: -2%; animation-delay: 1.6s; }
 .honor-label { font: 600 clamp(.8rem, 1.8vmin, 1.15rem) var(--sans); letter-spacing: .14em; text-transform: uppercase; color: var(--gold); margin-top: 2.4vmin; }
-.honor-name { font: 700 clamp(1.15rem, 2.85vmin, 2.05rem) var(--serif); color: var(--offwhite); margin-top: .6vmin; line-height: 1.12; min-height: 1.1em; }
+.honor-name { font: 700 clamp(1.25rem, 3.2vmin, 2.3rem) var(--serif); color: var(--offwhite); margin-top: .7vmin; line-height: 1.12; min-height: 1.1em; }
 .honor-name.empty { color: rgba(246,241,231,0.4); }
 .honor-program-tag { font: 500 clamp(.85rem, 1.9vmin, 1.2rem) var(--sans); color: rgba(246,241,231,0.62); margin-top: .4vmin; line-height: 1.15; }
 
@@ -291,13 +317,13 @@ button { font-family: inherit; cursor: pointer; }
 .closing::before {
   content: ""; position: absolute; left: 50%; top: 50%; width: 130vmin; height: 130vmin;
   transform: translate(-50%, -50%);
-  background: radial-gradient(circle, rgba(231,198,107,0.14), rgba(231,198,107,0.04) 45%, transparent 65%);
+  background: radial-gradient(circle, rgba(237,75,92,0.14), rgba(237,75,92,0.04) 45%, transparent 65%);
   z-index: -1; pointer-events: none; animation: glowPulse 4.5s ease-in-out infinite;
 }
 .closing-eyebrow { font: 600 clamp(0.85rem, 2vmin, 1.3rem) var(--sans); letter-spacing: .34em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.6vmin; padding-left: .34em; animation: fadeUp 1s ease .1s both; }
 .closing-title {
   font: 800 clamp(2.8rem, 11vmin, 8.6rem) var(--serif);
-  background: linear-gradient(100deg, var(--gold) 25%, #fff4cf 50%, var(--gold) 75%);
+  background: linear-gradient(100deg, var(--cream) 22%, #FFFFFF 50%, var(--cream) 78%);
   background-size: 230% 100%;
   -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent; color: transparent;
@@ -305,8 +331,9 @@ button { font-family: inherit; cursor: pointer; }
   animation: popIn 1s cubic-bezier(.2,.8,.2,1) .35s both, titleShine 6s ease-in-out 1.6s infinite;
 }
 .closing-subtitle { font: 400 clamp(1.1rem, 3.2vmin, 2.2rem) var(--sans); color: var(--offwhite); margin-top: 2vmin; letter-spacing: .05em; animation: fadeUp 1s ease .9s both; }
+.closing-message { max-width: 46ch; margin-top: 2.4vmin; padding: 0 4vmin; font: 400 clamp(1rem, 2.5vmin, 1.65rem) var(--sans); color: rgba(244,241,234,0.86); line-height: 1.55; animation: fadeUp 1s ease .9s both; }
 .closing-cta { margin-top: 4vmin; font: 600 clamp(1rem, 2.3vmin, 1.5rem) var(--sans); color: rgba(246,241,231,0.72); letter-spacing: .03em; animation: fadeUp 1s ease 1.4s both; }
-.closing-cta kbd { font-family: var(--sans); background: rgba(201,162,75,0.18); border: 1px solid rgba(201,162,75,0.4); border-radius: 4px; padding: 0.15em 0.5em; color: var(--gold-bright); }
+.closing-cta kbd { font-family: var(--sans); background: rgba(208,34,51,0.18); border: 1px solid rgba(208,34,51,0.4); border-radius: 4px; padding: 0.15em 0.5em; color: var(--gold-bright); }
 
 /* ======================================================================
    KUTLAMA / HALAY (parti)
@@ -344,7 +371,7 @@ button { font-family: inherit; cursor: pointer; }
 .eq.paused i { animation-play-state: paused; }
 
 /* ---- oynatıcı ---- */
-.player { position: relative; z-index: 2; width: 100%; max-width: 1100px; background: rgba(20,3,12,0.55); backdrop-filter: blur(8px); border: 1px solid rgba(201,162,75,0.35); border-radius: 18px; padding: 2.4vmin 3vmin; display: flex; flex-direction: column; gap: 1.6vmin; }
+.player { position: relative; z-index: 2; width: 100%; max-width: 1100px; background: rgba(20,3,12,0.55); backdrop-filter: blur(8px); border: 1px solid rgba(208,34,51,0.35); border-radius: 18px; padding: 2.4vmin 3vmin; display: flex; flex-direction: column; gap: 1.6vmin; }
 .np { display: flex; align-items: baseline; gap: 1.4vmin; justify-content: center; flex-wrap: wrap; }
 .np .np-n { font: 800 2.2vmin var(--serif); color: var(--bordo-deep); background: var(--gold-bright); border-radius: 8px; padding: 0.2em 0.6em; }
 .np .np-title { font: 700 clamp(1.2rem, 3vmin, 2.2rem) var(--serif); color: var(--offwhite); }
@@ -353,13 +380,13 @@ button { font-family: inherit; cursor: pointer; }
 .seek input[type=range] { flex: 1; accent-color: var(--gold); height: 6px; }
 .seek .time { font: 600 1.5vmin/1 var(--sans); color: rgba(246,241,231,0.7); min-width: 7ch; text-align: center; }
 .controls { display: flex; align-items: center; justify-content: center; gap: 2vmin; }
-.controls button { border: 1px solid rgba(201,162,75,0.4); background: rgba(0,0,0,0.25); color: var(--gold-bright); border-radius: 50%; width: 7vmin; height: 7vmin; min-width: 50px; min-height: 50px; font-size: 3vmin; display: flex; align-items: center; justify-content: center; transition: transform .15s ease, background .2s ease; }
+.controls button { border: 1px solid rgba(208,34,51,0.4); background: rgba(0,0,0,0.25); color: var(--gold-bright); border-radius: 50%; width: 7vmin; height: 7vmin; min-width: 50px; min-height: 50px; font-size: 3vmin; display: flex; align-items: center; justify-content: center; transition: transform .15s ease, background .2s ease; }
 .controls button:hover { transform: scale(1.08); background: rgba(0,0,0,0.45); }
 .controls .play { width: 9vmin; height: 9vmin; min-width: 64px; min-height: 64px; font-size: 4vmin; background: radial-gradient(circle at 35% 30%, var(--gold-bright), var(--gold) 70%); color: var(--bordo-deep); border: none; box-shadow: 0 6px 20px rgba(0,0,0,0.4); }
 .controls .on { color: var(--bordo-deep); background: var(--gold-bright); }
 .player-foot { display: flex; align-items: center; justify-content: space-between; gap: 2vmin; flex-wrap: wrap; }
 .mode-toggle { display: flex; gap: 0.6vmin; }
-.mode-toggle button { font: 600 1.6vmin var(--sans); padding: 0.5em 1em; border-radius: 999px; border: 1px solid rgba(201,162,75,0.4); background: transparent; color: rgba(246,241,231,0.7); }
+.mode-toggle button { font: 600 1.6vmin var(--sans); padding: 0.5em 1em; border-radius: 999px; border: 1px solid rgba(208,34,51,0.4); background: transparent; color: rgba(246,241,231,0.7); }
 .mode-toggle button.active { background: var(--gold-bright); color: var(--bordo-deep); border-color: var(--gold-bright); }
 .volume { display: flex; align-items: center; gap: 0.8vmin; color: var(--gold); font-size: 2vmin; }
 .volume input { accent-color: var(--gold); width: 14vmin; }
@@ -367,11 +394,13 @@ button { font-family: inherit; cursor: pointer; }
 
 .tracklist { position: relative; z-index: 2; width: 100%; max-width: 1100px; max-height: 16vh; overflow-y: auto; display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.4vmin 2vmin; padding: 0.5vmin; }
 .tracklist .tk { display: flex; gap: 1vmin; align-items: center; font: 500 1.7vmin var(--sans); color: rgba(246,241,231,0.7); padding: 0.4vmin 0.8vmin; border-radius: 6px; cursor: pointer; }
-.tracklist .tk:hover { background: rgba(201,162,75,0.12); }
-.tracklist .tk.active { background: rgba(201,162,75,0.22); color: var(--gold-bright); }
+.tracklist .tk:hover { background: rgba(208,34,51,0.12); }
+.tracklist .tk.active { background: rgba(208,34,51,0.22); color: var(--gold-bright); }
 .tracklist .tk .tk-n { color: var(--gold); min-width: 2.4ch; text-align: right; font-weight: 700; }
-.yt-embed { position: relative; z-index: 2; width: 100%; max-width: 1100px; aspect-ratio: 16/9; max-height: 40vh; border: 1px solid rgba(201,162,75,0.35); border-radius: 14px; overflow: hidden; }
+.yt-embed { position: relative; z-index: 2; width: 100%; max-width: 1100px; aspect-ratio: 16/9; max-height: 40vh; border: 1px solid rgba(208,34,51,0.35); border-radius: 14px; overflow: hidden; }
 .yt-embed iframe { width: 100%; height: 100%; border: 0; }
+.yt-audio-wrap { position: absolute; left: 0; bottom: 0; width: 1px; height: 1px; opacity: 0; overflow: hidden; pointer-events: none; }
+.np-list { font: 500 clamp(.8rem, 1.7vmin, 1.05rem) var(--sans); color: rgba(244,241,234,0.55); text-align: center; }
 
 /* ======================================================================
    KARARTMA + YARDIM
@@ -379,7 +408,7 @@ button { font-family: inherit; cursor: pointer; }
 .blackout { position: fixed; inset: 0; z-index: 8000; background: var(--bordo-deep); display: flex; align-items: center; justify-content: center; }
 .blackout img { width: min(30vw, 320px); opacity: 0.25; }
 .help { position: fixed; inset: 0; z-index: 8500; background: rgba(40,5,18,0.92); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; }
-.help-box { background: rgba(0,0,0,0.35); border: 1px solid rgba(201,162,75,0.35); border-radius: 16px; padding: 5vmin 6vmin; max-width: 760px; }
+.help-box { background: rgba(0,0,0,0.35); border: 1px solid rgba(208,34,51,0.35); border-radius: 16px; padding: 5vmin 6vmin; max-width: 760px; }
 .help-box h2 { font: 700 3vmin var(--serif); color: var(--gold-bright); margin-bottom: 3vmin; }
 .help-box table { border-collapse: collapse; width: 100%; }
 .help-box td { padding: 1vmin 1.6vmin; font-size: 2vmin; vertical-align: middle; }
@@ -402,7 +431,7 @@ button { font-family: inherit; cursor: pointer; }
 @keyframes kb3 { from { transform: scale(1.02) translate(0,0); }      to { transform: scale(1.14) translate(2%,-1%); } }
 @keyframes kb4 { from { transform: scale(1.14) translate(-2%,1.5%); } to { transform: scale(1.02) translate(0,0); } }
 @keyframes spin       { to { transform: translate(-50%, -50%) rotate(360deg); } }
-@keyframes logoGlow   { 0%,100% { filter: drop-shadow(0 6px 24px rgba(0,0,0,0.45)) drop-shadow(0 0 0 rgba(231,198,107,0)); } 50% { filter: drop-shadow(0 6px 24px rgba(0,0,0,0.45)) drop-shadow(0 0 26px rgba(231,198,107,0.55)); } }
+@keyframes logoGlow   { 0%,100% { filter: drop-shadow(0 6px 24px rgba(0,0,0,0.45)) drop-shadow(0 0 0 rgba(237,75,92,0)); } 50% { filter: drop-shadow(0 6px 24px rgba(0,0,0,0.45)) drop-shadow(0 0 26px rgba(237,75,92,0.55)); } }
 @keyframes titleShine { 0%,100% { background-position: 190% 0; } 50% { background-position: -90% 0; } }
 @keyframes crownBob   { 0%,100% { transform: translateX(-50%) translateY(0) scale(1); } 50% { transform: translateX(-50%) translateY(-1.2vmin) scale(1.08); } }
 @keyframes twinkle    { 0%,100% { opacity: 0; transform: scale(.4); } 50% { opacity: 1; transform: scale(1.15); } }
@@ -418,7 +447,7 @@ button { font-family: inherit; cursor: pointer; }
 @keyframes discoC     { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(8vw, -10vh) scale(1.25); } }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .15s !important; }
+  *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; transition-duration: .15s !important; }
   .kb-layer.show { animation: none !important; }
 }
 /* ======================================================================
@@ -437,8 +466,11 @@ button { font-family: inherit; cursor: pointer; }
 
   /* açılış */
   .intro-university { font-size: clamp(.68rem, 3.3vw, 1.1rem); letter-spacing: .26em; padding-left: .26em; }
-  .intro-school { font-size: clamp(1.7rem, 9vw, 3.1rem); }
-  .intro-title { font-size: clamp(2rem, 12.5vw, 4.2rem); }
+  .intro-school { font-size: clamp(1.05rem, 5.7vw, 2rem); line-height: 1.12; }
+  .intro-title { font-size: clamp(.95rem, 4.7vw, 1.65rem); }
+  .intro-subtitle { font-size: clamp(.7rem, 3vw, 1rem); }
+  .intro-quote { font-size: clamp(.72rem, 3vw, .95rem); margin-top: 2.2vh; padding: 0 7vw; line-height: 1.45; }
+  .intro-university { font-size: clamp(.5rem, 2.3vw, .78rem); letter-spacing: .1em; }
   .intro-subtitle { font-size: clamp(.92rem, 4.2vw, 1.4rem); }
   .gold-rule { width: 68vw; }
   .intro::before { top: 38%; }
@@ -457,11 +489,11 @@ button { font-family: inherit; cursor: pointer; }
   .h-eyebrow { font-size: clamp(.78rem, 3.4vw, 1.1rem); }
   .h-program { font-size: clamp(1.25rem, 5.8vw, 2.3rem); }
   .h-dept { font-size: clamp(.84rem, 3.6vw, 1.15rem); }
-  .honor-row { gap: 5vw 4vw; max-width: 100%; padding-bottom: 4vh; }
-  .honor-card { width: clamp(120px, 38vw, 200px); }
+  .honor-row { gap: 6vw 4vw; max-width: 100%; padding-top: 7vw; padding-bottom: 4vh; }
+  .honor-card { width: clamp(140px, 42vw, 230px); }
   .honor-card.r1 { animation-name: cardIn; }
-  .rank-badge { width: 9.5vw; height: 9.5vw; min-width: 38px; min-height: 38px; font-size: 5vw; top: -3vw; }
-  .honor-card.r1 .rank-badge { width: 11vw; height: 11vw; font-size: 5.6vw; }
+  .rank-badge { width: 11vw; height: 11vw; min-width: 42px; min-height: 42px; font-size: 5.6vw; margin-bottom: -0.6vw; }
+  .honor-card.r1 .rank-badge { width: 13vw; height: 13vw; font-size: 6.4vw; }
   .crown { font-size: 7.5vw; top: -10vw; }
   .honor-label { font-size: clamp(.68rem, 3vw, 1rem); margin-top: 3.5vw; }
   .honor-name { font-size: clamp(.9rem, 4.2vw, 1.4rem); }
@@ -478,7 +510,7 @@ button { font-family: inherit; cursor: pointer; }
   .party { padding: 2vh 4vw; gap: 1.6vh; }
   .party-top { margin-top: 1vh; }
   .party-eyebrow { font-size: clamp(.78rem, 3.4vw, 1.1rem); letter-spacing: .22em; }
-  .party-title { font-size: clamp(2rem, 11vw, 3.6rem); }
+  .party-title { font-size: clamp(1.5rem, 7.8vw, 2.8rem); }
   .viz-wrap { height: 11vh; }
   .player { padding: 3.5vw 4.5vw; gap: 2.5vw; border-radius: 14px; }
   .np { gap: 2.5vw; }

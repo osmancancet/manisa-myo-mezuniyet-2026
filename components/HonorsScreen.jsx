@@ -40,10 +40,9 @@ export default function HonorsScreen({ group, index, total }) {
           const src = h.photo ? encodeURI(h.photo) : CEREMONY_DATA.placeholderPhoto;
           return (
             <div className={`honor-card r${h.rank}`} key={i}>
-              {h.rank === 1 && <div className="crown">★</div>}
               <div className="photo-glow">
+                <div className="rank-badge">{h.rank}</div>
                 <div className="honor-photo-wrap">
-                  <div className="rank-badge">{h.rank}</div>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={src} alt={LABELS[h.rank] || ""} onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = CEREMONY_DATA.placeholderPhoto; }} />
                 </div>

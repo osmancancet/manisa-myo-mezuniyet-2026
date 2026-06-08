@@ -16,7 +16,7 @@ export default function ClosingScreen() {
       <div className="closing-eyebrow">{s.shortName}</div>
       <div className="gold-rule" />
       <div className="closing-title">{s.closingTitle}</div>
-      <div className="closing-subtitle">{s.closingSubtitle}</div>
+      <div className="closing-message">{s.closingMessage}</div>
       <div className="closing-cta">Kutlama / Halay için <kbd>→</kbd> ile devam edin</div>
     </motion.section>
   );
