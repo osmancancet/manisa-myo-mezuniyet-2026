@@ -93,9 +93,9 @@ export default function CountdownScreen({ from = 10, onClose, fileOverride = nul
       )}
 
       {!done ? (
-        <div className="cd-num" key={n}>
+        <div className="cd-num">
           <span className="cd-ring" aria-hidden="true" />
-          <span className="cd-digit">{n}</span>
+          <span className="cd-digit" key={n}>{n}</span>
         </div>
       ) : (
         <div className="cd-finale">

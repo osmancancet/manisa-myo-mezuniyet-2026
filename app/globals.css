@@ -677,6 +677,14 @@ button { font-family: inherit; cursor: pointer; }
   background: linear-gradient(100deg, var(--sky), #ffffff 50%, var(--azure));
   -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;
   filter: drop-shadow(0 8px 40px rgba(0,0,0,0.5));
+  animation: cdDigitIn .55s cubic-bezier(.2,.8,.2,1);
+}
+/* her rakam büyükten + bulanıktan netleşerek girer (halka kesintisiz döner) */
+@keyframes cdDigitIn {
+  0%   { opacity: 0; transform: scale(1.65); filter: blur(14px); }
+  55%  { opacity: 1; transform: scale(.97);  filter: blur(0); }
+  78%  { transform: scale(1.05); }
+  100% { opacity: 1; transform: scale(1);    filter: blur(0); }
 }
 .cd-finale { position: relative; z-index: 2; text-align: center; animation: cdPop .5s cubic-bezier(.2,.9,.2,1) both; }
 .cd-caps { display: flex; gap: 2vmin; justify-content: center; font-size: clamp(2.4rem, 7vmin, 6rem); margin-bottom: 1.5vmin; }
