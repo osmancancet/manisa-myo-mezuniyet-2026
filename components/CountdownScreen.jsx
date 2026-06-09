@@ -7,7 +7,7 @@ import { MUSIC } from "@/lib/data";
 // Otomatik 1 sn'de bir iner; → / Boşluk ile elle ilerletilebilir (canlı senkron için).
 // Açılır açılmaz hocanın istediği şarkı (We Are the Champions) çalar; kep atma anında
 // devam eder. Önce public/music/champions.mp3 denenir, yoksa YouTube'dan (sadece ses).
-export default function CountdownScreen({ from = 10, onClose }) {
+export default function CountdownScreen({ from = 10, onClose, fileOverride = null }) {
   const [n, setN] = useState(from);
   const [done, setDone] = useState(false);
   const [muted, setMuted] = useState(false);
@@ -70,8 +70,9 @@ export default function CountdownScreen({ from = 10, onClose }) {
   // açılışta şarkıyı başlat (C tuşu kullanıcı hareketi olduğundan otomatik oynatmaya izin verilir)
   useEffect(() => {
     const a = audioRef.current;
-    if (a && MUSIC.anthem?.file) {
-      a.src = MUSIC.anthem.file;
+    const localFile = fileOverride || MUSIC.anthem?.file;
+    if (a && localFile) {
+      a.src = localFile;
       a.volume = 0.95;
       a.play().then(() => setSource("mp3")).catch(() => startYouTube());
     } else {

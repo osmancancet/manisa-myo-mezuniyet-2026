@@ -9,6 +9,9 @@ import HonorsScreen from "@/components/HonorsScreen";
 import ClosingScreen from "@/components/ClosingScreen";
 import PartyScreen from "@/components/PartyScreen";
 import CountdownScreen from "@/components/CountdownScreen";
+import ControlBar from "@/components/ControlBar";
+import PreflightScreen from "@/components/PreflightScreen";
+import AgendaOverlay from "@/components/AgendaOverlay";
 
 const N = ACTIVE_PROGRAMS.length;   // yürüyüş: program sayısı
 const ND = HONORS.length;           // dereceler: bölüm/grup sayısı
@@ -21,10 +24,14 @@ export default function Page() {
   const [help, setHelp] = useState(false);
   const [countdown, setCountdown] = useState(false);
   const [autoToClosing, setAutoToClosing] = useState(false); // geri sayım kapanınca Kapanış'a geç
+  const [preflight, setPreflight] = useState(false);
+  const [agenda, setAgenda] = useState(false);
+  const [anthemSrc, setAnthemSrc] = useState(null);   // prova ekranından seçilen şarkı (blob URL)
+  const [anthemName, setAnthemName] = useState("");
   const lastNav = useRef(0);
 
-  const stateRef = useRef({ screen, proc, honor, help, countdown });
-  stateRef.current = { screen, proc, honor, help, countdown };
+  const stateRef = useRef({ screen, proc, honor, help, countdown, preflight, agenda });
+  stateRef.current = { screen, proc, honor, help, countdown, preflight, agenda };
 
   const next = useCallback(() => {
     const s = stateRef.current;
@@ -51,6 +58,9 @@ export default function Page() {
     setScreen(n);
   }, []);
 
+  const jumpProc = useCallback((i) => { setProc(Math.max(0, Math.min(N - 1, i))); setScreen(1); }, []);
+  const jumpHonor = useCallback((i) => { setHonor(Math.max(0, Math.min(ND - 1, i))); setScreen(2); }, []);
+
   const navNext = useCallback(() => { const t = performance.now(); if (t - lastNav.current < 220) return; lastNav.current = t; next(); }, [next]);
   const navPrev = useCallback(() => { const t = performance.now(); if (t - lastNav.current < 220) return; lastNav.current = t; prev(); }, [prev]);
 
@@ -59,6 +69,13 @@ export default function Page() {
     if (!d.fullscreenElement) { (el.requestFullscreen || el.webkitRequestFullscreen || (() => {})).call(el); }
     else { (d.exitFullscreen || d.webkitExitFullscreen || (() => {})).call(d); }
   }
+
+  // kazara sekme kapatma/yenileme koruması (tören sırasında)
+  useEffect(() => {
+    const onBeforeUnload = (e) => { e.preventDefault(); e.returnValue = ""; return ""; };
+    window.addEventListener("beforeunload", onBeforeUnload);
+    return () => window.removeEventListener("beforeunload", onBeforeUnload);
+  }, []);
 
   // YouTube ses motorunu önceden yükle: geri sayım/şarkı açılınca beklemeden başlasın
   useEffect(() => {
@@ -80,8 +97,12 @@ export default function Page() {
   useEffect(() => {
     function onKey(e) {
       const k = e.key;
-      if (stateRef.current.countdown) return; // geri sayım açıkken tuşları CountdownScreen yönetir
+      const s = stateRef.current;
+      // geri sayım / prova / akış açıkken tuşları o overlay yönetir
+      if (s.countdown || s.preflight || s.agenda) return;
       if (k === "c" || k === "C") { e.preventDefault(); setCountdown(true); return; }
+      if (k === "p" || k === "P") { e.preventDefault(); setPreflight(true); return; }
+      if (k === "g" || k === "G") { e.preventDefault(); setAgenda(true); return; }
       if (k === "ArrowRight" || k === " " || k === "PageDown" || k === "Enter") { e.preventDefault(); navNext(); }
       else if (k === "ArrowLeft" || k === "PageUp") { e.preventDefault(); navPrev(); }
       else if (k.length === 1 && k >= "1" && k <= "5") { jump(parseInt(k, 10) - 1); }
@@ -110,6 +131,7 @@ export default function Page() {
       else if (h.startsWith("kapanis")) jump(3);
       else if (h.startsWith("kutlama") || h.startsWith("party")) jump(4);
       else if (h.startsWith("acilis") || h.startsWith("intro")) jump(0);
+      else if (h.startsWith("kontrol") || h.startsWith("prova")) setPreflight(true);
       else if (["1", "2", "3", "4", "5"].includes(h)) jump(parseInt(h, 10) - 1);
     }
     applyHash();
@@ -119,9 +141,10 @@ export default function Page() {
 
   function onStageClick(e) {
     const t = e.target;
-    if (stateRef.current.countdown) return; // tıklamayı CountdownScreen yönetir
-    if (t.closest(".nav-arrow") || t.closest(".help-box") || t.closest(".player-area")) return;
-    if (stateRef.current.help) { setHelp(false); return; }
+    const s = stateRef.current;
+    if (s.countdown || s.preflight || s.agenda) return; // tıklamayı ilgili overlay yönetir
+    if (t.closest(".nav-arrow") || t.closest(".help-box") || t.closest(".player-area") || t.closest(".control-bar")) return;
+    if (s.help) { setHelp(false); return; }
     navNext();
   }
 
@@ -151,14 +174,48 @@ export default function Page() {
 
       {screen === 0 && (
         <div className="hint">
-          <kbd>→</kbd> İleri &nbsp; <kbd>←</kbd> Geri &nbsp; <kbd>C</kbd> Geri Sayım + Şarkı &nbsp; <kbd>F</kbd> Tam Ekran &nbsp; <kbd>H</kbd> Yardım
+          <kbd>→</kbd> İleri &nbsp; <kbd>←</kbd> Geri &nbsp; <kbd>C</kbd> Geri Sayım &nbsp; <kbd>G</kbd> Akış &nbsp; <kbd>P</kbd> Prova &nbsp; <kbd>F</kbd> Tam Ekran &nbsp; <kbd>H</kbd> Yardım
         </div>
       )}
 
       {countdown && (
         <CountdownScreen
           from={10}
+          fileOverride={anthemSrc}
           onClose={() => { setCountdown(false); if (autoToClosing) { setAutoToClosing(false); setScreen(3); } }}
+        />
+      )}
+
+      <ControlBar
+        onPrev={navPrev}
+        onNext={navNext}
+        onCountdown={() => setCountdown(true)}
+        onAgenda={() => setAgenda(true)}
+        onPreflight={() => setPreflight(true)}
+        onBlackout={() => setBlackout((v) => !v)}
+        onFs={toggleFs}
+        onHelp={() => setHelp((v) => !v)}
+      />
+
+      {preflight && (
+        <PreflightScreen
+          onClose={() => setPreflight(false)}
+          onAnthemFile={(url, name) => { setAnthemSrc(url); setAnthemName(name); }}
+          anthemSrc={anthemSrc}
+          anthemName={anthemName}
+          onFs={toggleFs}
+        />
+      )}
+
+      {agenda && (
+        <AgendaOverlay
+          screen={screen}
+          proc={proc}
+          honor={honor}
+          onClose={() => setAgenda(false)}
+          jump={jump}
+          jumpProc={jumpProc}
+          jumpHonor={jumpHonor}
         />
       )}
 
@@ -176,6 +233,8 @@ export default function Page() {
                 <tr><td>Dereceler bitince</td><td>Geri sayım + kep atma şarkısı (We Are the Champions) <b>otomatik</b> açılır; kapanınca "Yolunuz Açık Olsun"a geçer</td></tr>
                 <tr><td><kbd>C</kbd></td><td>Geri sayımı elle başlat (yedek)</td></tr>
                 <tr><td><kbd>M</kbd></td><td>Geri sayım sırasında şarkıyı sustur / aç</td></tr>
+                <tr><td><kbd>G</kbd></td><td>Tören akışı — bölüme/programa atla</td></tr>
+                <tr><td><kbd>P</kbd></td><td>Prova / ön-kontrol (foto, müzik, internet)</td></tr>
                 <tr><td><kbd>F</kbd></td><td>Tam ekran aç/kapat</td></tr>
                 <tr><td><kbd>B</kbd></td><td>Ekranı karart</td></tr>
                 <tr><td><kbd>H</kbd> / <kbd>?</kbd></td><td>Bu yardımı aç/kapat</td></tr>
