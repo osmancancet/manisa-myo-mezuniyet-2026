@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { burst, start as confettiStart, stop as confettiStop } from "@/lib/confetti";
 import { MUSIC, COUNTDOWN_STEP_MS } from "@/lib/data";
-import { startAnthem, stopAnthem, setAnthemMuted } from "@/lib/anthem";
+import { startAnthem, stopAnthem, setAnthemMuted, startLocalAnthem, stopLocalAnthem, setLocalAnthemMuted } from "@/lib/anthem";
 
 // Tören sunucuları 10'dan geriye sayarken sunumda da büyük geri sayım gösterir.
 // Otomatik iner (hız data.js'ten); → / Boşluk ile elle ilerletilebilir (canlı senkron için).
@@ -41,26 +41,20 @@ export default function CountdownScreen({ from = 10, onClose, fileOverride = nul
     return () => { cancelAnimationFrame(id); confettiStop(); };
   }, [done]);
 
-  /* ---------- ŞARKI: önce yerel dosya, olmazsa önceden hazır YouTube (anında) ---------- */
-  const audioRef = useRef(null);
+  /* ---------- ŞARKI: önceden tamponlanmış yerel dosya (anında), olmazsa hazır YouTube ---------- */
   const usingYt = useRef(false);
+  const usingLocal = useRef(false);
 
   // açılışta şarkıyı başlat (C / ileri tuşu kullanıcı hareketi olduğundan oynatmaya izin verilir)
   useEffect(() => {
-    const a = audioRef.current;
-    const localFile = fileOverride || MUSIC.anthem?.file;
     let cancelled = false;
     const goYt = () => { if (cancelled) return; usingYt.current = true; setSource("youtube"); startAnthem(); };
-    if (a && localFile) {
-      a.src = localFile;
-      a.volume = 0.95;
-      a.play().then(() => { if (!cancelled) setSource("mp3"); }).catch(goYt);
-    } else {
-      goYt();
-    }
+    startLocalAnthem(fileOverride)
+      .then(() => { if (!cancelled) { usingLocal.current = true; setSource("mp3"); } })
+      .catch(goYt);
     return () => {
       cancelled = true;
-      if (a) { try { a.pause(); a.removeAttribute("src"); a.load(); } catch (_) {} }
+      if (usingLocal.current) stopLocalAnthem();
       if (usingYt.current) stopAnthem();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -68,7 +62,7 @@ export default function CountdownScreen({ from = 10, onClose, fileOverride = nul
 
   // sustur / aç
   useEffect(() => {
-    if (audioRef.current) audioRef.current.muted = muted;
+    if (usingLocal.current) setLocalAnthemMuted(muted);
     if (usingYt.current) setAnthemMuted(muted);
   }, [muted, source]);
 
@@ -89,8 +83,6 @@ export default function CountdownScreen({ from = 10, onClose, fileOverride = nul
   return (
     <div className="countdown-overlay" onClick={() => (done ? onClose() : stepRef.current())}>
       <div className="cd-glow" aria-hidden="true" />
-
-      <audio ref={audioRef} preload="none" />
 
       {source && (
         <div className="cd-music" onClick={(e) => { e.stopPropagation(); setMuted((v) => !v); }}

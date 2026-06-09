@@ -82,7 +82,7 @@ export default function Page() {
   // Geri sayım şarkısını önceden hazırla: oynatıcıyı kur + videoyu tampona al (cue),
   // böylece geri sayım açılınca şarkı beklemeden (anında) başlar.
   useEffect(() => {
-    const id = setTimeout(() => preloadAnthem(MUSIC.anthem?.youtubeId), 1200);
+    const id = setTimeout(() => preloadAnthem(MUSIC.anthem?.youtubeId, MUSIC.anthem?.file), 1200);
     return () => clearTimeout(id);
   }, []);
 
