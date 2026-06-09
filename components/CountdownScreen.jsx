@@ -81,7 +81,7 @@ export default function CountdownScreen({ from = 10, onClose, fileOverride = nul
   }, [done, onClose]);
 
   return (
-    <div className="countdown-overlay" onClick={() => (done ? onClose() : stepRef.current())}>
+    <div className="countdown-overlay" data-anthem={source || "..."} onClick={() => (done ? onClose() : stepRef.current())}>
       <div className="cd-glow" aria-hidden="true" />
 
       {source && (
