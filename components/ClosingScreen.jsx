@@ -1,7 +1,7 @@
 "use client";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
-import { screenVariants } from "@/lib/motion";
+import { closingVariants } from "@/lib/motion";
 import { CEREMONY_DATA } from "@/lib/data";
 import { start as confettiStart, stop as confettiStop } from "@/lib/confetti";
 
@@ -12,7 +12,7 @@ export default function ClosingScreen() {
     return () => confettiStop();
   }, []);
   return (
-    <motion.section className="screen closing" variants={screenVariants} initial="initial" animate="animate" exit="exit">
+    <motion.section className="screen closing" variants={closingVariants} initial="initial" animate="animate" exit="exit">
       <div className="closing-eyebrow">{s.university}</div>
       <div className="closing-school">Manisa Teknik Bilimler Meslek Yüksekokulu</div>
       <div className="gold-rule" />

@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { screenVariants, prefersReducedMotion } from "@/lib/motion";
+import { honorsVariants, prefersReducedMotion } from "@/lib/motion";
 import { CEREMONY_DATA } from "@/lib/data";
 import { burst } from "@/lib/confetti";
 
@@ -25,17 +25,18 @@ export default function HonorsScreen({ group, index, total }) {
 
   useEffect(() => {
     if (prefersReducedMotion() || empty) return;
-    const id = requestAnimationFrame(() => {
+    // konfetiyi 1. (kazanan) belirdiği ana denk getir (rütbe gecikmesi ~1.0s)
+    const id = setTimeout(() => {
       const first = rowRef.current?.querySelector(".r1 .honor-photo-wrap");
       let x = window.innerWidth / 2, y = window.innerHeight * 0.42;
       if (first) { const r = first.getBoundingClientRect(); x = r.left + r.width / 2; y = r.top + r.height * 0.15; }
       burst({ x, y, count: isSchool ? 60 : 34, spread: 1.6, power: 13 });
-    });
-    return () => cancelAnimationFrame(id);
+    }, 1050);
+    return () => clearTimeout(id);
   }, [group.key, empty, isSchool]);
 
   return (
-    <motion.section className={`screen honors${isSchool ? " honors-school" : ""}`} variants={screenVariants} initial="initial" animate="animate" exit="exit">
+    <motion.section className={`screen honors${isSchool ? " honors-school" : ""}`} variants={honorsVariants} initial="initial" animate="animate" exit="exit">
       <div className="proc-counter"><b>{index + 1}</b> / {total}</div>
       <div className="honors-head">
         <div className="h-eyebrow">{isSchool ? "Okul Birincileri" : "Dereceye Girenler"}</div>

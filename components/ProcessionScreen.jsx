@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { screenVariants } from "@/lib/motion";
+import { processionVariants } from "@/lib/motion";
 import { CEREMONY_DATA } from "@/lib/data";
 import { preload, isOk } from "@/lib/preload";
 
@@ -57,7 +57,7 @@ export default function ProcessionScreen({ program, index, total }) {
   }, [program.slug]);
 
   return (
-    <motion.section className="screen procession" variants={screenVariants} initial="initial" animate="animate" exit="exit">
+    <motion.section className="screen procession" variants={processionVariants} initial="initial" animate="animate" exit="exit">
       <div className="kb-stage">
         <div ref={aRef} className="kb-layer" />
         <div ref={bRef} className="kb-layer" />
@@ -76,10 +76,10 @@ export default function ProcessionScreen({ program, index, total }) {
         <motion.div
           key={program.slug}
           className="proc-caption"
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -16 }}
-          transition={{ duration: 0.5 }}
+          initial={{ opacity: 0, y: 22, filter: "blur(7px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          exit={{ opacity: 0, y: -16, filter: "blur(6px)" }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         >
           <div className="proc-eyebrow">Mezunlar Geçidi</div>
           <div className="proc-program">{program.name}</div>

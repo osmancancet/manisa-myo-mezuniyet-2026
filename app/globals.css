@@ -122,6 +122,7 @@ button { font-family: inherit; cursor: pointer; }
   border: 1px solid rgba(0,144,204,0.45);
   font-size: 3.4vmin; opacity: 0.4;
   transition: opacity .3s ease, background .3s ease, transform .2s ease;
+  animation: navPulse 3.6s ease-in-out infinite;
 }
 .nav-arrow:hover { opacity: 1; background: rgba(0,0,0,0.45); transform: scale(1.06); }
 .nav-arrow.prev { left: 3vmin; }
@@ -246,7 +247,7 @@ button { font-family: inherit; cursor: pointer; }
   -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent; color: transparent;
   filter: drop-shadow(0 4px 22px rgba(0,0,0,0.45));
-  animation: fadeUp .6s ease .75s both, titleShine 6s ease-in-out 1.6s infinite;
+  animation: titleReveal .85s cubic-bezier(.2,.8,.2,1) .7s both, titleShine 6s ease-in-out 1.8s infinite;
 }
 .intro-subtitle {
   font: 400 clamp(1.15rem, 3.2vmin, 2.1rem) var(--sans);
@@ -324,7 +325,7 @@ button { font-family: inherit; cursor: pointer; }
 .honors { justify-content: flex-start; padding-top: 4vmin; }
 .honors-head { margin-bottom: 3vmin; }
 .h-eyebrow { font: 600 clamp(.9rem, 2vmin, 1.3rem) var(--sans); letter-spacing: .26em; text-transform: uppercase; color: var(--azure-bright); text-shadow: 0 0 16px rgba(0,144,204,0.5); }
-.h-program { font: 800 clamp(2.2rem, 6.9vmin, 5.3rem) var(--serif); color: var(--offwhite); line-height: 1.08; margin-top: .6vmin; }
+.h-program { font: 800 clamp(2.2rem, 6.9vmin, 5.3rem) var(--serif); color: var(--offwhite); line-height: 1.08; margin-top: .6vmin; animation: titleReveal .8s cubic-bezier(.2,.8,.2,1) .15s both; }
 .h-dept { font: 400 clamp(.95rem, 2.2vmin, 1.4rem) var(--sans); color: rgba(246,241,231,0.7); margin-top: .6vmin; }
 
 /* padding-top: rozetler fotoğrafın üstünde durduğundan, başlığa taşmasınlar diye
@@ -334,11 +335,11 @@ button { font-family: inherit; cursor: pointer; }
 .honor-card.r1 { animation-name: cardInR1; }
 .honor-card.r2 { animation-name: cardInR2; }
 .honor-card.r3 { animation-name: cardInR3; }
-.honor-row .honor-card:nth-child(1) { animation-delay: .05s; }
-.honor-row .honor-card:nth-child(2) { animation-delay: .2s; }
-.honor-row .honor-card:nth-child(3) { animation-delay: .35s; }
-.honor-row .honor-card:nth-child(4) { animation-delay: .5s; }
-.honor-row .honor-card:nth-child(5) { animation-delay: .65s; }
+/* 3 → 2 → 1 gerilimli reveal: önce 3., sonra 2.('ler), en son 1. (kazanan) belirir.
+   Beraberlik aynı rütbe → aynı gecikme → birlikte açılır. */
+.honor-card.r3 { animation-delay: .15s; }
+.honor-card.r2 { animation-delay: .55s; }
+.honor-card.r1 { animation-delay: 1.0s; }
 .honors-empty-note { position: relative; z-index: 2; margin-top: 4vmin; font: 500 clamp(1rem, 2.4vmin, 1.5rem) var(--sans); color: rgba(246,241,231,0.6); }
 .honors-school .h-program {
   background: var(--grad-brand-3); -webkit-background-clip: text; background-clip: text;
@@ -456,7 +457,7 @@ button { font-family: inherit; cursor: pointer; }
   -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent; color: transparent;
   filter: drop-shadow(0 6px 34px rgba(0,0,0,0.5)); line-height: 1.12;
-  animation: popIn 1s cubic-bezier(.2,.8,.2,1) .35s both, titleShine 6s ease-in-out 1.6s infinite;
+  animation: titleReveal 1s cubic-bezier(.2,.8,.2,1) .35s both, titleShine 6s ease-in-out 1.8s infinite;
 }
 .closing-subtitle { font: 400 clamp(1.1rem, 3.2vmin, 2.2rem) var(--sans); color: var(--offwhite); margin-top: 2vmin; letter-spacing: .05em; animation: fadeUp 1s ease .9s both; }
 .closing-message { max-width: 46ch; margin-top: 2.4vmin; padding: 0 4vmin; font: 400 clamp(1rem, 2.5vmin, 1.65rem) var(--sans); color: rgba(244,241,234,0.86); line-height: 1.55; animation: fadeUp 1s ease .9s both; }
@@ -713,9 +714,11 @@ button { font-family: inherit; cursor: pointer; }
 @keyframes fadeUp   { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes wipeIn   { from { opacity: 0; clip-path: inset(0 100% 0 0); } to { opacity: 1; clip-path: inset(0 0 0 0); } }
 @keyframes drawRule { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes titleReveal { from { opacity: 0; transform: translateY(26px); clip-path: inset(0 0 100% 0); } to { opacity: 1; transform: translateY(0); clip-path: inset(0 0 0 0); } }
+@keyframes navPulse { 0%,100% { box-shadow: 0 0 0 rgba(0,144,204,0); } 50% { box-shadow: 0 0 16px rgba(0,144,204,0.35); } }
 @keyframes popIn    { from { opacity: 0; transform: scale(.85); } to { opacity: 1; transform: scale(1); } }
 @keyframes cardIn   { from { opacity: 0; transform: perspective(1400px) translateY(34px) rotateX(16deg) scale(.95); } to { opacity: 1; transform: perspective(1400px) translateY(0) rotateX(0) scale(1); } }
-@keyframes cardInR1 { from { opacity: 0; transform: perspective(1400px) translateY(34px) rotateX(16deg) scale(.95); } to { opacity: 1; transform: perspective(1400px) translateY(-2.8vmin) rotateX(0) scale(1.06); } }
+@keyframes cardInR1 { 0% { opacity: 0; transform: perspective(1400px) translateY(34px) rotateX(16deg) scale(.95); } 72% { opacity: 1; transform: perspective(1400px) translateY(-3.4vmin) rotateX(0) scale(1.12); } 100% { opacity: 1; transform: perspective(1400px) translateY(-2.8vmin) rotateX(0) scale(1.06); } }
 @keyframes cardInR2 { from { opacity: 0; transform: perspective(1400px) translateY(34px) rotateX(16deg) scale(.95); } to { opacity: 1; transform: perspective(1400px) translateY(0) rotateX(0) scale(1); } }
 @keyframes cardInR3 { from { opacity: 0; transform: perspective(1400px) translateY(34px) rotateX(16deg) scale(.95); } to { opacity: 1; transform: perspective(1400px) translateY(3.6vmin) rotateX(0) scale(1); } }
 @keyframes shimmer  { 0% { left: -120%; } 55%, 100% { left: 140%; } }

@@ -1,6 +1,6 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, MotionConfig } from "framer-motion";
 import { ACTIVE_PROGRAMS, HONORS, MUSIC } from "@/lib/data";
 import { preloadAnthem } from "@/lib/anthem";
 import Ambient from "@/components/Ambient";
@@ -168,7 +168,9 @@ export default function Page() {
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img className="brand-logo" src="/assets/logo-corner.png" alt="Manisa Celal Bayar Üniversitesi — Teknik Bilimler MYO" />
 
-      <AnimatePresence>{renderScreen()}</AnimatePresence>
+      <MotionConfig reducedMotion="user">
+        <AnimatePresence>{renderScreen()}</AnimatePresence>
+      </MotionConfig>
 
 
       <div className="nav-arrow prev" title="Geri (←)" onClick={(e) => { e.stopPropagation(); navPrev(); }}>‹</div>
