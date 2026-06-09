@@ -1,7 +1,8 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence } from "framer-motion";
-import { ACTIVE_PROGRAMS, HONORS } from "@/lib/data";
+import { ACTIVE_PROGRAMS, HONORS, MUSIC } from "@/lib/data";
+import { preloadAnthem } from "@/lib/anthem";
 import Ambient from "@/components/Ambient";
 import IntroScreen from "@/components/IntroScreen";
 import ProcessionScreen from "@/components/ProcessionScreen";
@@ -26,6 +27,7 @@ export default function Page() {
   const [autoToClosing, setAutoToClosing] = useState(false); // geri sayım kapanınca Kapanış'a geç
   const [preflight, setPreflight] = useState(false);
   const [agenda, setAgenda] = useState(false);
+  const [controls, setControls] = useState(false); // operatör kontrol çubuğu (O ile aç/kapat)
   const [anthemSrc, setAnthemSrc] = useState(null);   // prova ekranından seçilen şarkı (blob URL)
   const [anthemName, setAnthemName] = useState("");
   const lastNav = useRef(0);
@@ -77,12 +79,11 @@ export default function Page() {
     return () => window.removeEventListener("beforeunload", onBeforeUnload);
   }, []);
 
-  // YouTube ses motorunu önceden yükle: geri sayım/şarkı açılınca beklemeden başlasın
+  // Geri sayım şarkısını önceden hazırla: oynatıcıyı kur + videoyu tampona al (cue),
+  // böylece geri sayım açılınca şarkı beklemeden (anında) başlar.
   useEffect(() => {
-    if (document.getElementById("yt-iframe-api")) return;
-    const s = document.createElement("script");
-    s.id = "yt-iframe-api"; s.src = "https://www.youtube.com/iframe_api";
-    document.body.appendChild(s);
+    const id = setTimeout(() => preloadAnthem(MUSIC.anthem?.youtubeId), 1200);
+    return () => clearTimeout(id);
   }, []);
 
   useEffect(() => {
@@ -108,6 +109,7 @@ export default function Page() {
       else if (k.length === 1 && k >= "1" && k <= "5") { jump(parseInt(k, 10) - 1); }
       else if (k === "Home") jump(0);
       else if (k === "End") jump(4);
+      else if (k === "o" || k === "O") setControls((v) => !v);
       else if (k === "f" || k === "F") toggleFs();
       else if (k === "b" || k === "B") setBlackout((v) => !v);
       else if (k === "h" || k === "H" || k === "?") setHelp((v) => !v);
@@ -174,7 +176,7 @@ export default function Page() {
 
       {screen === 0 && (
         <div className="hint">
-          <kbd>→</kbd> İleri &nbsp; <kbd>←</kbd> Geri &nbsp; <kbd>C</kbd> Geri Sayım &nbsp; <kbd>G</kbd> Akış &nbsp; <kbd>P</kbd> Prova &nbsp; <kbd>F</kbd> Tam Ekran &nbsp; <kbd>H</kbd> Yardım
+          <kbd>→</kbd> İleri &nbsp; <kbd>←</kbd> Geri &nbsp; <kbd>C</kbd> Geri Sayım &nbsp; <kbd>O</kbd> Kontrol Çubuğu &nbsp; <kbd>G</kbd> Akış &nbsp; <kbd>P</kbd> Prova &nbsp; <kbd>H</kbd> Yardım
         </div>
       )}
 
@@ -187,6 +189,7 @@ export default function Page() {
       )}
 
       <ControlBar
+        visible={controls}
         onPrev={navPrev}
         onNext={navNext}
         onCountdown={() => setCountdown(true)}
@@ -195,6 +198,7 @@ export default function Page() {
         onBlackout={() => setBlackout((v) => !v)}
         onFs={toggleFs}
         onHelp={() => setHelp((v) => !v)}
+        onHide={() => setControls(false)}
       />
 
       {preflight && (
@@ -233,6 +237,7 @@ export default function Page() {
                 <tr><td>Dereceler bitince</td><td>Geri sayım + kep atma şarkısı (We Are the Champions) <b>otomatik</b> açılır; kapanınca "Yolunuz Açık Olsun"a geçer</td></tr>
                 <tr><td><kbd>C</kbd></td><td>Geri sayımı elle başlat (yedek)</td></tr>
                 <tr><td><kbd>M</kbd></td><td>Geri sayım sırasında şarkıyı sustur / aç</td></tr>
+                <tr><td><kbd>O</kbd></td><td>Operatör kontrol çubuğunu aç / kapat (varsayılan gizli)</td></tr>
                 <tr><td><kbd>G</kbd></td><td>Tören akışı — bölüme/programa atla</td></tr>
                 <tr><td><kbd>P</kbd></td><td>Prova / ön-kontrol (foto, müzik, internet)</td></tr>
                 <tr><td><kbd>F</kbd></td><td>Tam ekran aç/kapat</td></tr>

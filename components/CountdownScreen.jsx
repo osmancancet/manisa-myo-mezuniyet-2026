@@ -1,13 +1,15 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { burst, start as confettiStart, stop as confettiStop } from "@/lib/confetti";
-import { MUSIC } from "@/lib/data";
+import { MUSIC, COUNTDOWN_STEP_MS } from "@/lib/data";
+import { startAnthem, stopAnthem, setAnthemMuted } from "@/lib/anthem";
 
 // Tören sunucuları 10'dan geriye sayarken sunumda da büyük geri sayım gösterir.
-// Otomatik 1 sn'de bir iner; → / Boşluk ile elle ilerletilebilir (canlı senkron için).
-// Açılır açılmaz hocanın istediği şarkı (We Are the Champions) çalar; kep atma anında
-// devam eder. Önce public/music/champions.mp3 denenir, yoksa YouTube'dan (sadece ses).
-export default function CountdownScreen({ from = 10, onClose, fileOverride = null }) {
+// Otomatik iner (hız data.js'ten); → / Boşluk ile elle ilerletilebilir (canlı senkron için).
+// Açılır açılmaz hocanın istediği şarkı (We Are the Champions) çalar; kep atma anında devam eder.
+// Önce yerel dosya (champions.mp3 / seçilen dosya) denenir, yoksa ÖNCEDEN HAZIR YouTube oynatıcısı
+// anında çalar (lib/anthem.js — uygulama açılışında tampona alınır, geç başlamaz).
+export default function CountdownScreen({ from = 10, onClose, fileOverride = null, stepMs = COUNTDOWN_STEP_MS }) {
   const [n, setN] = useState(from);
   const [done, setDone] = useState(false);
   const [muted, setMuted] = useState(false);
@@ -22,12 +24,12 @@ export default function CountdownScreen({ from = 10, onClose, fileOverride = nul
     else setDone(true);
   };
 
-  // otomatik saniye sayacı
+  // otomatik sayaç — her rakam stepMs kadar ekranda kalır (data.js'ten ayarlanır)
   useEffect(() => {
     if (done) return;
-    const t = setTimeout(() => stepRef.current(), 1000);
+    const t = setTimeout(() => stepRef.current(), stepMs);
     return () => clearTimeout(t);
-  }, [n, done]);
+  }, [n, done, stepMs]);
 
   // finalde konfeti + patlama
   useEffect(() => {
@@ -39,49 +41,27 @@ export default function CountdownScreen({ from = 10, onClose, fileOverride = nul
     return () => { cancelAnimationFrame(id); confettiStop(); };
   }, [done]);
 
-  /* ---------- ŞARKI: önce yerel MP3, olmazsa YouTube (sadece ses) ---------- */
+  /* ---------- ŞARKI: önce yerel dosya, olmazsa önceden hazır YouTube (anında) ---------- */
   const audioRef = useRef(null);
-  const ytRef = useRef(null);
+  const usingYt = useRef(false);
 
-  function startYouTube() {
-    const id = MUSIC.anthem?.youtubeId;
-    if (!id || ytRef.current) return;
-    setSource("youtube");
-    const build = () => {
-      if (ytRef.current || !window.YT || !window.YT.Player) return;
-      ytRef.current = new window.YT.Player("cd-yt-audio", {
-        height: "1", width: "1", videoId: id,
-        playerVars: { autoplay: 1, controls: 0, disablekb: 1, playsinline: 1, rel: 0, modestbranding: 1 },
-        events: {
-          onReady: (e) => { try { e.target.setVolume(100); e.target.playVideo(); } catch (_) {} },
-        },
-      });
-    };
-    if (window.YT && window.YT.Player) { build(); return; }
-    const prev = window.onYouTubeIframeAPIReady;
-    window.onYouTubeIframeAPIReady = () => { if (typeof prev === "function") prev(); build(); };
-    if (!document.getElementById("yt-iframe-api")) {
-      const s = document.createElement("script");
-      s.id = "yt-iframe-api"; s.src = "https://www.youtube.com/iframe_api";
-      document.body.appendChild(s);
-    }
-  }
-
-  // açılışta şarkıyı başlat (C tuşu kullanıcı hareketi olduğundan otomatik oynatmaya izin verilir)
+  // açılışta şarkıyı başlat (C / ileri tuşu kullanıcı hareketi olduğundan oynatmaya izin verilir)
   useEffect(() => {
     const a = audioRef.current;
     const localFile = fileOverride || MUSIC.anthem?.file;
+    let cancelled = false;
+    const goYt = () => { if (cancelled) return; usingYt.current = true; setSource("youtube"); startAnthem(); };
     if (a && localFile) {
       a.src = localFile;
       a.volume = 0.95;
-      a.play().then(() => setSource("mp3")).catch(() => startYouTube());
+      a.play().then(() => { if (!cancelled) setSource("mp3"); }).catch(goYt);
     } else {
-      startYouTube();
+      goYt();
     }
     return () => {
+      cancelled = true;
       if (a) { try { a.pause(); a.removeAttribute("src"); a.load(); } catch (_) {} }
-      if (ytRef.current?.destroy) { try { ytRef.current.destroy(); } catch (_) {} }
-      ytRef.current = null;
+      if (usingYt.current) stopAnthem();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -89,10 +69,7 @@ export default function CountdownScreen({ from = 10, onClose, fileOverride = nul
   // sustur / aç
   useEffect(() => {
     if (audioRef.current) audioRef.current.muted = muted;
-    try {
-      const p = ytRef.current;
-      if (p) { muted ? p.mute?.() : p.unMute?.(); }
-    } catch (_) {}
+    if (usingYt.current) setAnthemMuted(muted);
   }, [muted, source]);
 
   // klavye: Esc kapatır, →/Boşluk/Enter elle ilerletir, M susturur, finalde herhangi bir tuş kapatır
@@ -114,7 +91,6 @@ export default function CountdownScreen({ from = 10, onClose, fileOverride = nul
       <div className="cd-glow" aria-hidden="true" />
 
       <audio ref={audioRef} preload="none" />
-      <div className="cd-yt-audio" aria-hidden="true"><div id="cd-yt-audio" /></div>
 
       {source && (
         <div className="cd-music" onClick={(e) => { e.stopPropagation(); setMuted((v) => !v); }}
