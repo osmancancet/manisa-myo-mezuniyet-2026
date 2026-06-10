@@ -21,9 +21,13 @@ export default function MusicPlayer() {
   const rafRef = useRef(null);
   const ytRef = useRef(null);
 
-  const [mode, setMode] = useState(() =>
-    (typeof window !== "undefined" && window.location.hash.toLowerCase().includes("mp3")) ? "offline" : "online"
-  );
+  // İnternet yoksa otomatik yerel MP3 moduna geç (#mp3 etiketi de zorlar).
+  const [mode, setMode] = useState(() => {
+    if (typeof window === "undefined") return "online";
+    if (window.location.hash.toLowerCase().includes("mp3")) return "offline";
+    if (navigator.onLine === false) return "offline";
+    return "online";
+  });
 
   // offline (MP3) durumu
   const [idx, setIdx] = useState(0);

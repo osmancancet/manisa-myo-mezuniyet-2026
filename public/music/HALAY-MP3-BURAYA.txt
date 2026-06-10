@@ -1,0 +1,15 @@
+İNTERNETSİZ HALAY / OYUN HAVASI MÜZİĞİ
+=======================================
+
+İnternet yoksa parti (Kutlama) ekranı otomatik "Yerel MP3" moduna geçer ve bu klasördeki
+dosyaları çalar. Çalması için dosyaları tam olarak şu adlarla buraya koy:
+
+    01.mp3, 02.mp3, 03.mp3, ... 40.mp3   (public/music/ içine)
+
+• İstediğin kadar koyabilirsin (ör. sadece 01..10). Sıra numarasına göre çalar.
+• Parça adları sunumda "lib/data.js > MUSIC.tracks" listesinden gösterilir; istersen oradan
+  başlıkları kendi parçalarına göre düzenle (sıra aynı kalsın).
+• champions.mp3 (geri sayım/kep atma şarkısı) zaten burada ve internetsiz çalışıyor.
+
+Telifli müzik dosyalarını ben koyamam; kendi/lisanslı kopyalarını sen eklersin.
+Bu .txt dosyasını silebilirsin.
