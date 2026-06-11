@@ -17,23 +17,29 @@ function toPodium(list) {
     .map((x) => x.h);
 }
 
-export default function HonorsScreen({ group, index, total }) {
+export default function HonorsScreen({ group, index, total, revealStep = 1 }) {
   const rowRef = useRef(null);
   const empty = !(group.honors && group.honors.length);
-  const honors = toPodium(empty ? PLACEHOLDER : group.honors);
+  const base = empty ? PLACEHOLDER : group.honors;
+  const honors = toPodium(base);
   const isSchool = group.key === "okul";
 
+  // Açıklama sırası: en düşük dereceden yükseğe (3. → 2. → 1.). revealStep kadarı açık.
+  const ranksDesc = [...new Set(base.map((h) => h.rank))].sort((a, b) => b - a);
+  const revealedRanks = new Set(ranksDesc.slice(0, revealStep));
+  const fullyRevealed = revealStep >= ranksDesc.length;
+
   useEffect(() => {
-    if (prefersReducedMotion() || empty) return;
-    // konfetiyi 1. (kazanan) belirdiği ana denk getir (rütbe gecikmesi ~1.0s)
+    if (prefersReducedMotion() || empty || !fullyRevealed) return;
+    // konfetiyi 1. (kazanan) elle açıldığı ana denk getir
     const id = setTimeout(() => {
       const first = rowRef.current?.querySelector(".r1 .honor-photo-wrap");
       let x = window.innerWidth / 2, y = window.innerHeight * 0.42;
       if (first) { const r = first.getBoundingClientRect(); x = r.left + r.width / 2; y = r.top + r.height * 0.15; }
       burst({ x, y, count: isSchool ? 60 : 34, spread: 1.6, power: 13 });
-    }, 1050);
+    }, 280);
     return () => clearTimeout(id);
-  }, [group.key, empty, isSchool]);
+  }, [group.key, fullyRevealed, empty, isSchool]);
 
   return (
     <motion.section className={`screen honors${isSchool ? " honors-school" : ""}`} variants={honorsVariants} initial="initial" animate="animate" exit="exit">
@@ -46,17 +52,18 @@ export default function HonorsScreen({ group, index, total }) {
 
       <div className="honor-row" ref={rowRef} key={group.key}>
         {honors.map((h, i) => {
-          const hasName = h.name && h.name.trim() !== "";
-          const src = h.photo ? encodeURI(h.photo) : CEREMONY_DATA.placeholderPhoto;
+          const revealed = !empty && revealedRanks.has(h.rank);
+          const showName = revealed && h.name && h.name.trim() !== "";
+          const src = revealed && h.photo ? encodeURI(h.photo) : CEREMONY_DATA.placeholderPhoto;
           return (
-            <div className={`honor-card r${h.rank}`} key={i}>
+            <div className={`honor-card r${h.rank}${revealed ? " revealed" : " masked"}`} key={i}>
               <div className="photo-glow">
                 <div className="rank-badge">{h.rank}</div>
                 <div className="honor-photo-wrap">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={src} alt={LABELS[h.rank] || ""} onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = CEREMONY_DATA.placeholderPhoto; }} />
                 </div>
-                {h.rank === 1 && (
+                {revealed && h.rank === 1 && (
                   <>
                     <span className="spark s1" /><span className="spark s2" />
                     <span className="spark s3" /><span className="spark s4" />
@@ -64,14 +71,17 @@ export default function HonorsScreen({ group, index, total }) {
                 )}
               </div>
               <div className="honor-label">{LABELS[h.rank] || h.rank + "."}</div>
-              <div className={`honor-name${hasName ? "" : " empty"}`}>{hasName ? h.name : "—"}</div>
-              {h.program && <div className="honor-program-tag">{h.program}</div>}
+              <div className={`honor-name${showName ? "" : " empty"}`}>{showName ? h.name : "—"}</div>
+              {revealed && h.program && <div className="honor-program-tag">{h.program}</div>}
             </div>
           );
         })}
       </div>
 
       {empty && <div className="honors-empty-note">Bu bölümün dereceleri yakında eklenecek.</div>}
+      {!empty && !fullyRevealed && (
+        <div className="honors-step-hint">Sıradaki dereceyi açmak için <kbd>→</kbd></div>
+      )}
     </motion.section>
   );
 }

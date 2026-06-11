@@ -367,11 +367,22 @@ button { font-family: inherit; cursor: pointer; }
 .honor-card.r1 { animation-name: cardInR1; }
 .honor-card.r2 { animation-name: cardInR2; }
 .honor-card.r3 { animation-name: cardInR3; }
-/* 3 → 2 → 1 gerilimli reveal: önce 3., sonra 2.('ler), en son 1. (kazanan) belirir.
-   Beraberlik aynı rütbe → aynı gecikme → birlikte açılır. */
-.honor-card.r3 { animation-delay: .15s; }
-.honor-card.r2 { animation-delay: .55s; }
-.honor-card.r1 { animation-delay: 1.0s; }
+/* Podyum (silüetler) birlikte ve hızlı belirir; dereceler sonra → ile tek tek açılır. */
+.honor-card.r3 { animation-delay: .12s; }
+.honor-card.r2 { animation-delay: .18s; }
+.honor-card.r1 { animation-delay: .24s; }
+/* Tek tek açılış: açılmamış dereceler silüet (placeholder), açılan canlanır. */
+.honor-card.masked .honor-photo-wrap img { filter: grayscale(1) brightness(.5); opacity: .5; }
+.honor-card.masked .honor-name { opacity: .3; }
+.honor-card.masked .rank-badge { opacity: .75; }
+.honor-card.revealed .honor-photo-wrap { animation: honorReveal .6s cubic-bezier(.2,.8,.2,1) both; }
+.honor-card.revealed .honor-name { animation: fadeUp .5s ease .12s both; }
+.honors-step-hint {
+  position: absolute; bottom: 4vmin; left: 0; right: 0; z-index: 4;
+  font: 600 clamp(.85rem, 2vmin, 1.25rem) var(--sans); color: rgba(246,241,231,0.72);
+  letter-spacing: .04em; animation: hintPulse 2s ease-in-out infinite;
+}
+.honors-step-hint kbd { font-family: var(--sans); background: rgba(0,144,204,0.18); border: 1px solid rgba(0,144,204,0.4); border-radius: 4px; padding: .1em .45em; color: var(--azure-bright); }
 .honors-empty-note { position: relative; z-index: 2; margin-top: 4vmin; font: 500 clamp(1rem, 2.4vmin, 1.5rem) var(--sans); color: rgba(246,241,231,0.6); }
 .honors-school .h-program {
   background: linear-gradient(100deg, var(--royal) 0%, var(--azure) 32%, var(--sky) 50%, var(--red-bright) 72%, var(--azure) 100%);
@@ -790,6 +801,8 @@ button { font-family: inherit; cursor: pointer; }
 @keyframes schoolGlow { 0%,100% { filter: drop-shadow(0 0 22px rgba(0,144,204,0.35)); } 50% { filter: drop-shadow(0 0 38px rgba(208,34,51,0.40)); } }
 @keyframes eyebrowGlow { 0%,100% { text-shadow: 0 0 14px rgba(0,144,204,0.45); } 50% { text-shadow: 0 0 22px rgba(91,194,240,0.75); } }
 @keyframes eyebrowGlowGold { 0%,100% { text-shadow: 0 0 14px rgba(241,200,75,0.45); } 50% { text-shadow: 0 0 24px rgba(255,212,90,0.8); } }
+@keyframes honorReveal { from { opacity: 0; transform: scale(.82) rotateY(12deg); filter: blur(6px); } to { opacity: 1; transform: scale(1) rotateY(0); filter: blur(0); } }
+@keyframes hintPulse  { 0%,100% { opacity: .5; } 50% { opacity: 1; } }
 @keyframes ruleGrow   { from { width: 0; opacity: 0; } to { width: clamp(220px, 42vmin, 640px); opacity: 1; } }
 @keyframes rulePulse  { 0%,100% { box-shadow: 0 0 12px rgba(0,144,204,0.45); } 50% { box-shadow: 0 0 22px rgba(91,194,240,0.7); } }
 @keyframes crownBob   { 0%,100% { transform: translateX(-50%) translateY(0) scale(1); } 50% { transform: translateX(-50%) translateY(-1.2vmin) scale(1.08); } }

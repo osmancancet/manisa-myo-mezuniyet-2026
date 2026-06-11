@@ -18,10 +18,18 @@ import AgendaOverlay from "@/components/AgendaOverlay";
 const N = ACTIVE_PROGRAMS.length;   // yürüyüş: program sayısı
 const ND = HONORS.length;           // dereceler: bölüm/grup sayısı
 
+// Bir grupta kaç açılış adımı var = farklı derece (rütbe) sayısı (3. → 2. → 1.).
+// Beraberlikler (aynı rütbe) tek adımda birlikte açılır. Boş grup tek adım.
+function honorStepsOf(group) {
+  if (!group || !group.honors || group.honors.length === 0) return 1;
+  return new Set(group.honors.map((h) => h.rank)).size;
+}
+
 export default function Page() {
   const [screen, setScreen] = useState(0);
   const [proc, setProc] = useState(0);
   const [honor, setHonor] = useState(0);
+  const [honorStep, setHonorStep] = useState(1); // aktif bölümde kaç derece açıldı (elle reveal)
   const [blackout, setBlackout] = useState(false);
   const [help, setHelp] = useState(false);
   const [countdown, setCountdown] = useState(false);
@@ -33,16 +41,21 @@ export default function Page() {
   const [anthemName, setAnthemName] = useState("");
   const lastNav = useRef(0);
 
-  const stateRef = useRef({ screen, proc, honor, help, countdown, preflight, agenda });
-  stateRef.current = { screen, proc, honor, help, countdown, preflight, agenda };
+  const stateRef = useRef({ screen, proc, honor, honorStep, help, countdown, preflight, agenda });
+  stateRef.current = { screen, proc, honor, honorStep, help, countdown, preflight, agenda };
 
   const next = useCallback(() => {
     const s = stateRef.current;
     if (s.help) { setHelp(false); return; }
     if (s.screen === 0) setScreen(1);
-    else if (s.screen === 1) { if (s.proc < N - 1) setProc(s.proc + 1); else { setHonor(0); setScreen(2); } }
-    else if (s.screen === 2) { if (s.honor < ND - 1) setHonor(s.honor + 1); else { setAutoToClosing(true); setCountdown(true); } } // Dereceler bitti → kep atma geri sayımı, sonra Kapanış
-
+    else if (s.screen === 1) { if (s.proc < N - 1) setProc(s.proc + 1); else { setHonor(0); setHonorStep(1); setScreen(2); } }
+    else if (s.screen === 2) {
+      // Önce bölümün dereceleri tek tek açılır (3. → 2. → 1.), sonra sonraki bölüme geçilir.
+      const steps = honorStepsOf(HONORS[s.honor]);
+      if (s.honorStep < steps) setHonorStep(s.honorStep + 1);
+      else if (s.honor < ND - 1) { setHonor(s.honor + 1); setHonorStep(1); }
+      else { setAutoToClosing(true); setCountdown(true); } // Dereceler bitti → kep atma geri sayımı, sonra Kapanış
+    }
     else if (s.screen === 3) setScreen(4);
   }, []);
 
@@ -50,19 +63,23 @@ export default function Page() {
     const s = stateRef.current;
     if (s.help) { setHelp(false); return; }
     if (s.screen === 1) { if (s.proc > 0) setProc(s.proc - 1); else setScreen(0); }
-    else if (s.screen === 2) { if (s.honor > 0) setHonor(s.honor - 1); else { setProc(Math.max(0, N - 1)); setScreen(1); } }
-    else if (s.screen === 3) { setHonor(Math.max(0, ND - 1)); setScreen(2); }
+    else if (s.screen === 2) {
+      if (s.honorStep > 1) setHonorStep(s.honorStep - 1);
+      else if (s.honor > 0) { const pi = s.honor - 1; setHonor(pi); setHonorStep(honorStepsOf(HONORS[pi])); }
+      else { setProc(Math.max(0, N - 1)); setScreen(1); }
+    }
+    else if (s.screen === 3) { const li = Math.max(0, ND - 1); setHonor(li); setHonorStep(honorStepsOf(HONORS[li])); setScreen(2); }
     else if (s.screen === 4) setScreen(3);
   }, []);
 
   const jump = useCallback((n) => {
     if (n === 1) setProc(0);
-    if (n === 2) setHonor(0);
+    if (n === 2) { setHonor(0); setHonorStep(1); }
     setScreen(n);
   }, []);
 
   const jumpProc = useCallback((i) => { setProc(Math.max(0, Math.min(N - 1, i))); setScreen(1); }, []);
-  const jumpHonor = useCallback((i) => { setHonor(Math.max(0, Math.min(ND - 1, i))); setScreen(2); }, []);
+  const jumpHonor = useCallback((i) => { setHonor(Math.max(0, Math.min(ND - 1, i))); setHonorStep(1); setScreen(2); }, []);
 
   const navNext = useCallback(() => { const t = performance.now(); if (t - lastNav.current < 220) return; lastNav.current = t; next(); }, [next]);
   const navPrev = useCallback(() => { const t = performance.now(); if (t - lastNav.current < 220) return; lastNav.current = t; prev(); }, [prev]);
@@ -140,6 +157,7 @@ export default function Page() {
       else if (h.startsWith("dereceler")) {
         const m = h.match(/(\d+)/);
         setHonor(m ? Math.max(0, Math.min(ND - 1, parseInt(m[1], 10))) : 0);
+        setHonorStep(1);
         setScreen(2);
       }
       else if (h.startsWith("kapanis")) jump(3);
@@ -166,7 +184,7 @@ export default function Page() {
     switch (screen) {
       case 0: return <IntroScreen key="intro" />;
       case 1: return <ProcessionScreen key="proc" program={ACTIVE_PROGRAMS[proc]} index={proc} total={N} />;
-      case 2: return <HonorsScreen key="honors" group={HONORS[honor]} index={honor} total={ND} />;
+      case 2: return <HonorsScreen key="honors" group={HONORS[honor]} index={honor} total={ND} revealStep={honorStep} />;
       case 3: return <ClosingScreen key="closing" />;
       case 4: return <PartyScreen key="party" />;
       default: return null;
@@ -248,6 +266,7 @@ export default function Page() {
                 <tr><td><kbd>→</kbd> / <kbd>Boşluk</kbd> / tıklama</td><td>İleri</td></tr>
                 <tr><td><kbd>←</kbd></td><td>Geri</td></tr>
                 <tr><td><kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> <kbd>4</kbd> <kbd>5</kbd></td><td>Açılış / Yürüyüş / Dereceler / Kapanış / Kutlama</td></tr>
+                <tr><td>Dereceler ekranı</td><td>Her <kbd>→</kbd> sıradaki dereceyi açar (3. → 2. → 1.); hepsi açılınca sonraki bölüme geçer</td></tr>
                 <tr><td>Dereceler bitince</td><td>Geri sayım + kep atma şarkısı (We Are the Champions) <b>otomatik</b> açılır; kapanınca "Yolunuz Açık Olsun"a geçer</td></tr>
                 <tr><td><kbd>C</kbd></td><td>Geri sayımı elle başlat (yedek)</td></tr>
                 <tr><td><kbd>M</kbd></td><td>Geri sayım sırasında şarkıyı sustur / aç</td></tr>
