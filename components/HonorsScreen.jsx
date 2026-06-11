@@ -44,7 +44,7 @@ export default function HonorsScreen({ group, index, total, revealStep = 1 }) {
   return (
     <motion.section className={`screen honors${isSchool ? " honors-school" : ""}`} variants={honorsVariants} initial="initial" animate="animate" exit="exit">
       <div className="proc-counter"><b>{index + 1}</b> / {total}</div>
-      <div className="honors-head" key={group.key}>
+      <div className="honors-head" key={`head-${group.key}`}>
         <div className="h-eyebrow">{isSchool ? "Okul Birincileri" : "Dereceye Girenler"}</div>
         <div className="h-program">{group.title}</div>
         <div className="h-dept">{group.subtitle}</div>
