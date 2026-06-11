@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, MotionConfig } from "framer-motion";
 import { ACTIVE_PROGRAMS, HONORS, MUSIC } from "@/lib/data";
 import { preloadAnthem } from "@/lib/anthem";
+import { playScreenMusic, stopScreenMusic } from "@/lib/screenMusic";
 import Ambient from "@/components/Ambient";
 import IntroScreen from "@/components/IntroScreen";
 import ProcessionScreen from "@/components/ProcessionScreen";
@@ -78,6 +79,17 @@ export default function Page() {
     window.addEventListener("beforeunload", onBeforeUnload);
     return () => window.removeEventListener("beforeunload", onBeforeUnload);
   }, []);
+
+  // Ekran müziği: Geçit'te programın özel parçası (yoksa genel giriş müziği),
+  // Dereceler'de belge takdimi müziği. Geri sayım açıkken sus (marşla çakışmasın).
+  useEffect(() => {
+    let id = null;
+    if (!countdown) {
+      if (screen === 1) id = ACTIVE_PROGRAMS[proc]?.music || MUSIC.procession?.youtubeId;
+      else if (screen === 2) id = MUSIC.honors?.youtubeId;
+    }
+    if (id) playScreenMusic(id); else stopScreenMusic();
+  }, [screen, proc, countdown]);
 
   // Geri sayım şarkısını önceden hazırla: oynatıcıyı kur + videoyu tampona al (cue),
   // böylece geri sayım açılınca şarkı beklemeden (anında) başlar.

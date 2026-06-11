@@ -195,7 +195,7 @@ export default function MusicPlayer() {
               <button className="play" title="Oynat / Duraklat" onClick={ytToggle}>{ytPlaying ? "⏸" : "▶"}</button>
               <button title="Sonraki" onClick={ytNext}>⏭</button>
             </div>
-            <div className="np-list">Önce Manisa / zeybek / çiftetelli, sonra Ankara oyun havaları çalar.</div>
+            <div className="np-list">Erik Dalı, Ankara'nın Bağları, Yerinde Dur, Yakar Geçerim ile başlar; ardından çiftetelli ve oyun havaları çalar.</div>
           </div>
         </>
       ) : (
