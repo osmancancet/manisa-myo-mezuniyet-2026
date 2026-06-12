@@ -372,26 +372,20 @@ button { font-family: inherit; cursor: pointer; }
 .honor-card.r2 { animation-delay: .18s; }
 .honor-card.r1 { animation-delay: .24s; }
 /* Solo slayt: tek büyük kart ortada, podyum kaydırması/yükseltmesi yok. */
-.honor-row.solo { padding-top: 4vmin; gap: 3vmin; padding-bottom: 9vmin; }
+.honor-row.solo { padding-top: 4vmin; gap: 3vmin; padding-bottom: 3vmin; }
 .honor-row.solo .honor-card,
 .honor-row.solo .honor-card.r1,
 .honor-row.solo .honor-card.r2,
 .honor-row.solo .honor-card.r3 {
   transform: none; animation-name: cardIn; animation-delay: .05s;
   /* Tek kişi gösterilirken fotoğrafı YÜKSEKLİĞE göre sınırla: altta isim +
-     program + ipucu yazısı için yer kalsın, üst üste binmesin. */
-  width: clamp(240px, 42vh, 420px);
+     program için yer kalsın, üst üste binmesin. */
+  width: clamp(240px, 44vh, 440px);
 }
 /* Solo'da tek kart var; beraberlik hizası gerekmez → isim/program için
-   ayrılan boş yeri kaldır, yazıları yukarı çek (alttaki ipucuna binmesin). */
+   ayrılan boş yeri kaldır, yazıları yukarı çek. */
 .honor-row.solo .honor-name { min-height: 0; margin-top: 1.6vmin; }
 .honor-row.solo .honor-program-tag { min-height: 0; }
-.honors-step-hint {
-  position: absolute; bottom: 4vmin; left: 0; right: 0; z-index: 4;
-  font: 600 clamp(.85rem, 2vmin, 1.25rem) var(--sans); color: rgba(246,241,231,0.72);
-  letter-spacing: .04em; animation: hintPulse 2s ease-in-out infinite;
-}
-.honors-step-hint kbd { font-family: var(--sans); background: rgba(0,144,204,0.18); border: 1px solid rgba(0,144,204,0.4); border-radius: 4px; padding: .1em .45em; color: var(--azure-bright); }
 .honors-empty-note { position: relative; z-index: 2; margin-top: 4vmin; font: 500 clamp(1rem, 2.4vmin, 1.5rem) var(--sans); color: rgba(246,241,231,0.6); }
 .honors-school .h-program {
   background: linear-gradient(100deg, var(--royal) 0%, var(--azure) 32%, var(--sky) 50%, var(--red-bright) 72%, var(--azure) 100%);
@@ -546,22 +540,30 @@ button { font-family: inherit; cursor: pointer; }
 }
 .t-dept { font: 400 clamp(.9rem, 2.1vmin, 1.35rem) var(--sans); color: rgba(246,241,231,0.72); margin-top: .5vmin; letter-spacing: .04em; }
 
+/* İsimler soldan sağa, satır satır akar (grid → row-major). --fit ölçeği
+   TakdimScreen.jsx tarafından küçültülür: yazı + sütun min-genişliği birlikte
+   küçülür → daha çok sütun, daha az satır → her boyutta ekrana sığar. */
 .takdim-names {
-  position: relative; z-index: 2; width: 100%; max-width: 1720px;
-  columns: clamp(190px, 19vw, 300px); column-gap: 3vmin;
-  padding: 0 2vmin; overflow: hidden;
+  position: relative; z-index: 2; width: 100%; max-width: 1760px;
+  display: grid;
+  /* Sütun min-genişliği en uzun ada (25+ harf) bir satırda yetecek kadar geniş;
+     --fit küçülünce hem font hem sütun aynı oranda küçülür → isim hep sığar, kırpılmaz. */
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, calc(330px * var(--fit, 1))), 1fr));
+  gap: calc(0.7vmin * var(--fit, 1)) calc(2.4vmin * var(--fit, 1));
+  align-content: center; justify-items: start;
+  padding: 0 2vmin; flex: 1 1 auto; min-height: 0; overflow: hidden;
 }
-.takdim-names.dense { columns: clamp(150px, 15vw, 240px); column-gap: 2.2vmin; }
 .grad-name {
-  display: block; break-inside: avoid; padding: .5vmin 0;
-  font: 600 clamp(.95rem, 1.9vmin, 1.5rem) var(--sans); color: var(--offwhite);
-  letter-spacing: .01em; text-shadow: 0 2px 14px rgba(0,0,0,0.5);
-  opacity: 0; animation: gradIn .5s ease both;
+  display: block; padding: calc(.35vmin * var(--fit, 1)) 0; max-width: 100%;
+  font: 600 calc(clamp(.85rem, 1.8vmin, 1.45rem) * var(--fit, 1)) var(--sans); color: var(--offwhite);
+  letter-spacing: .01em; text-shadow: 0 2px 14px rgba(0,0,0,0.5); line-height: 1.2;
+  opacity: 0; animation: gradInLeft .45s ease both;
 }
-.takdim-names.dense .grad-name { font-size: clamp(.82rem, 1.55vmin, 1.2rem); padding: .32vmin 0; }
 .grad-name::before { content: "•"; color: var(--azure-bright); margin-right: .5em; opacity: .65; }
 .takdim-empty { position: relative; z-index: 2; margin-top: 6vmin; font: 500 clamp(1rem, 2.4vmin, 1.5rem) var(--sans); color: rgba(246,241,231,0.6); }
 @keyframes gradIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+/* isimler soldan akarak gelir */
+@keyframes gradInLeft { from { opacity: 0; transform: translateX(-16px); } to { opacity: 1; transform: translateX(0); } }
 
 /* ======================================================================
    KUTLAMA / HALAY (parti)
@@ -845,7 +847,6 @@ button { font-family: inherit; cursor: pointer; }
 @keyframes schoolGlow { 0%,100% { filter: drop-shadow(0 0 22px rgba(0,144,204,0.35)); } 50% { filter: drop-shadow(0 0 38px rgba(208,34,51,0.40)); } }
 @keyframes eyebrowGlow { 0%,100% { text-shadow: 0 0 14px rgba(0,144,204,0.45); } 50% { text-shadow: 0 0 22px rgba(91,194,240,0.75); } }
 @keyframes eyebrowGlowGold { 0%,100% { text-shadow: 0 0 14px rgba(241,200,75,0.45); } 50% { text-shadow: 0 0 24px rgba(255,212,90,0.8); } }
-@keyframes hintPulse  { 0%,100% { opacity: .5; } 50% { opacity: 1; } }
 @keyframes ruleGrow   { from { width: 0; opacity: 0; } to { width: clamp(220px, 42vmin, 640px); opacity: 1; } }
 @keyframes rulePulse  { 0%,100% { box-shadow: 0 0 12px rgba(0,144,204,0.45); } 50% { box-shadow: 0 0 22px rgba(91,194,240,0.7); } }
 @keyframes crownBob   { 0%,100% { transform: translateX(-50%) translateY(0) scale(1); } 50% { transform: translateX(-50%) translateY(-1.2vmin) scale(1.08); } }

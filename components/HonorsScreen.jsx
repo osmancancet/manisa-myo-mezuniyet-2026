@@ -80,9 +80,6 @@ export default function HonorsScreen({ group, index, total, revealStep = 1 }) {
       </div>
 
       {empty && <div className="honors-empty-note">Bu bölümün dereceleri yakında eklenecek.</div>}
-      {!empty && !podiumMode && (
-        <div className="honors-step-hint">Sıradaki dereceyi açmak için <kbd>→</kbd></div>
-      )}
     </motion.section>
   );
 }

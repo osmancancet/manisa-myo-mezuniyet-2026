@@ -116,15 +116,16 @@ export default function Page() {
 
   // Ekran müziği: Geçit'te genel giriş müziği, Dereceler'de belge takdimi müziği,
   // Takdim'de (temsili diploma) özel parça. Geri sayım açıkken sus (marşla çakışmasın).
+  // ŞİMDİLİK: Takdim müziği yalnızca Dijital Dönüşüm programında çalsın, diğerlerinde sus.
   useEffect(() => {
     let id = null;
     if (!countdown) {
       if (screen === 1) id = ACTIVE_PROGRAMS[proc]?.music || MUSIC.procession?.youtubeId;
       else if (screen === 2) id = MUSIC.honors?.youtubeId;
-      else if (screen === 3) id = MUSIC.takdim?.youtubeId;
+      else if (screen === 3 && ACTIVE_PROGRAMS[takdimIdx]?.slug === "dijital-donusum-elektronigi") id = MUSIC.takdim?.youtubeId;
     }
     if (id) playScreenMusic(id); else stopScreenMusic();
-  }, [screen, proc, countdown]);
+  }, [screen, proc, takdimIdx, countdown]);
 
   // Geri sayım şarkısını önceden hazırla: oynatıcıyı kur + videoyu tampona al (cue),
   // böylece geri sayım açılınca şarkı beklemeden (anında) başlar.
