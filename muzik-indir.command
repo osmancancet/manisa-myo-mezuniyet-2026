@@ -77,6 +77,60 @@ dl 02-Kutlama 11 "Fidayda - Hudayda - Ankara"              FQ4dacmQvsg
 dl 02-Kutlama 12 "Ankara Oyun Havasi Potpori (30 dk)"      lZ6qcQnghYc
 dl 02-Kutlama 13 "Roman Oyun Havasi"                       oQdYo2XYGrc
 
+echo
+echo "── 3) GENİŞ OYUN HAVASI KATALOĞU (46) ──────────────────"
+dls() {  # klasör  numara  ad  arama-sorgusu  (YouTube'da adıyla aranır)
+  printf "  ⬇️  %s - %s … " "$2" "$3"
+  if "$YTDLP" -q --no-warnings --no-playlist "${FMT[@]}" \
+       -o "$OUT/$1/$2 - $3.%(ext)s" "ytsearch1:$4" 2>/dev/null; then
+    echo "✓"; OK=$((OK+1)); else echo "✗ (atlandı)"; FAIL=$((FAIL+1)); fi; }
+dls 03-OyunHavalari 01 "Erik Dali"             "Erik Dalı oyun havası"
+dls 03-OyunHavalari 02 "Ankaranin Baglari"     "Ankaranın Bağları oyun havası"
+dls 03-OyunHavalari 03 "Yerinde Dur"           "Yerinde Dur Sefo Demet Akalın"
+dls 03-OyunHavalari 04 "Yakar Gecerim"         "Yakar Geçerim Ajda Pekkan"
+dls 03-OyunHavalari 05 "Omrum"                 "Ömrüm oyun havası"
+dls 03-OyunHavalari 06 "Misket"                "Misket Ankara oyun havası"
+dls 03-OyunHavalari 07 "Fadime"                "Fadime Ankara oyun havası"
+dls 03-OyunHavalari 08 "Hulya"                 "Hülya Ankara oyun havası"
+dls 03-OyunHavalari 09 "Yandim Seker"          "Yandım Şeker oyun havası"
+dls 03-OyunHavalari 10 "Fidayda"               "Fidayda Ankara oyun havası"
+dls 03-OyunHavalari 11 "Hudayda"               "Hüdayda Ankara oyun havası"
+dls 03-OyunHavalari 12 "Yarim Istanbulu"       "Yarim İstanbul'u oyun havası"
+dls 03-OyunHavalari 13 "Rampi Rampi"           "Rampi Rampi oyun havası"
+dls 03-OyunHavalari 14 "Ciftetelli"            "Çiftetelli oyun havası"
+dls 03-OyunHavalari 17 "Esmerim"               "Esmerim Biçim Biçim oyun havası"
+dls 03-OyunHavalari 18 "Madimak"               "Madımak oyun havası"
+dls 03-OyunHavalari 19 "Tamzara"               "Tamzara halay"
+dls 03-OyunHavalari 20 "Delilo"                "Delilo halay"
+dls 03-OyunHavalari 21 "Diyarbakir Halayi"     "Diyarbakır Halayı"
+dls 03-OyunHavalari 22 "Govend"                "Govend halay"
+dls 03-OyunHavalari 23 "Harmandali"            "Harmandalı zeybek"
+dls 03-OyunHavalari 24 "Sari Zeybek"           "Sarı Zeybek"
+dls 03-OyunHavalari 25 "Bergama Zeybegi"       "Bergama Zeybeği"
+dls 03-OyunHavalari 26 "Izmir Zeybegi"         "İzmir Zeybeği"
+dls 03-OyunHavalari 27 "Horon"                 "Horon karadeniz oyun havası"
+dls 03-OyunHavalari 28 "Karadeniz Oyun Havasi" "Karadeniz oyun havası"
+dls 03-OyunHavalari 29 "Sinanay"               "Şinanay oyun havası"
+dls 03-OyunHavalari 30 "Mavilim"               "Mavilim oyun havası"
+dls 03-OyunHavalari 31 "Hoplaya Hoplaya"       "Hoplaya Hoplaya oyun havası"
+dls 03-OyunHavalari 32 "Drama Koprusu"         "Drama Köprüsü rumeli"
+dls 03-OyunHavalari 33 "Vardar Ovasi"          "Vardar Ovası rumeli"
+dls 03-OyunHavalari 34 "Sallana Sallana"       "Sallana Sallana oyun havası"
+dls 03-OyunHavalari 35 "Nare"                  "Nare halay"
+dls 03-OyunHavalari 36 "Dello"                 "Dello halay"
+dls 03-OyunHavalari 37 "Halay Potpori"         "Halay potpori"
+dls 03-OyunHavalari 38 "Cekirge"               "Çekirge oyun havası"
+dls 03-OyunHavalari 39 "Koroglu"               "Köroğlu halk oyunu"
+dls 03-OyunHavalari 40 "Karsilama"             "Karşılama trakya oyun havası"
+dls 03-OyunHavalari 41 "Damdan Dama"           "Damdan Dama oyun havası"
+dls 03-OyunHavalari 42 "Kina Havasi"           "Kına Havası"
+dls 03-OyunHavalari 43 "Cokertme"              "Çökertme zeybek"
+dls 03-OyunHavalari 44 "Cakici Zeybegi"        "Çakıcı zeybeği"
+dls 03-OyunHavalari 45 "Telgrafin Telleri"     "Telgrafın Telleri Ankara oyun havası"
+dls 03-OyunHavalari 46 "Entarisi Ala Benziyor" "Entarisi Ala Benziyor oyun havası"
+dls 03-OyunHavalari 47 "Haci Arap"             "Hacı Arap Ankara oyun havası"
+dls 03-OyunHavalari 48 "Cezayir"               "Cezayir Ankara oyun havası"
+
 # ---- ses ekibi için OKUNBENI ----
 cat > "$OUT/OKUNBENI.txt" <<'TXT'
 MEZUNİYET TÖRENİ — MÜZİK DOSYALARI (Ses Ekibi İçin)
@@ -84,19 +138,25 @@ MEZUNİYET TÖRENİ — MÜZİK DOSYALARI (Ses Ekibi İçin)
 
 KLASÖR 01-Toren  → Tören sırasıyla:
   01  Mezunlar Geçidi Giriş Müziği  → Mezunlar alana girip yerlerini alırken.
-  02  Dereceler / Belge Takdimi     → Plaket ve başarı belgeleri verilirken.
+  02  Dereceler / Belge Takdimi     → Plaket, başarı belgeleri ve TSO hediye
+                                       çeki takdiminde (aynı parça sürer).
   03  Temsili Diploma (Esra Hoca)   → Mezuniyet belgeleri takdiminde; YALNIZCA
                                        Dijital Dönüşüm programında. Diğer
                                        programlarda talep yoksa 01 (Giriş) çalın.
   04  Kep Atma (We Are the Champions)→ Geri sayım + kep atma anında.
 
-KLASÖR 02-Kutlama → Tören bitince, sırayla çalınacak oyun havası/halay listesi.
+KLASÖR 02-Kutlama → Tören bitince SIRAYLA çalınacak ana liste (13 parça).
+KLASÖR 03-OyunHavalari → Geniş oyun havası/halay/zeybek kataloğu (46 parça,
+  numaralı). Sırayla ya da seçerek çalınır.
+
+NOT: MEZUNİYET ŞARKIMIZ.mp3 (okulun hazırladığı özel parça) bu araçla İNMEZ;
+  ayrıca eklenir. Tören öncesi alanda çalınacak.
 
 ÖNEMLİ NOTLAR:
   • İSTİKLAL MARŞI bu pakette YOKTUR — ayrı, hazır kayıttan çalınır (alan ses
     sistemi). Saygı duruşunda tam sessizlik.
-  • Tören öncesi (alan dolarken) okulun hazırladığı parça çalar + perdede
-    MYO tanıtım sunumu oynar; tören başlayınca durdurulur.
+  • Tören öncesi (alan dolarken) MEZUNİYET ŞARKIMIZ çalar + perdede MYO tanıtım
+    sunumu oynar; tören başlayınca durdurulur.
   • Marş ve konuşmalardan önce çalan müziğin kapatıldığından emin olun.
 
 Detaylı akış için: Muzik-Akis-Raporu.pdf
