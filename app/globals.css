@@ -561,7 +561,56 @@ button { font-family: inherit; cursor: pointer; }
 }
 @media (prefers-reduced-motion: reduce) { .credits-track { animation: none; } }
 .takdim-empty { position: relative; z-index: 2; margin-top: 6vmin; font: 500 clamp(1rem, 2.4vmin, 1.5rem) var(--sans); color: rgba(246,241,231,0.6); }
-.takdim-empty { position: relative; z-index: 2; margin-top: 6vmin; font: 500 clamp(1rem, 2.4vmin, 1.5rem) var(--sans); color: rgba(246,241,231,0.6); }
+
+/* ======================================================================
+   SAYGI DURUŞU + İSTİKLAL MARŞI · KONUŞMALAR · TSO HEDİYE ÇEKİ
+   ====================================================================== */
+.saygi { gap: 1vmin; }
+.saygi-eyebrow { font: 600 clamp(.9rem, 2.1vmin, 1.35rem) var(--sans); letter-spacing: .28em; text-transform: uppercase; color: var(--azure-bright); animation: fadeUp .6s ease both; }
+.saygi-title { font: 800 clamp(2rem, 5.6vmin, 4.2rem) var(--serif); color: var(--cream); margin: .35em 0 0; line-height: 1.1; filter: drop-shadow(0 4px 22px rgba(0,0,0,0.45)); }
+.saygi-text { max-width: 64ch; margin-top: 2.2vmin; font: 400 clamp(1rem, 2.3vmin, 1.5rem) var(--sans); color: rgba(246,241,231,0.82); line-height: 1.65; }
+
+.konusma-card { display: flex; flex-direction: column; align-items: center; animation: cardIn .7s cubic-bezier(.2,.7,.2,1) both; }
+.k-podium { font-size: clamp(2.6rem, 8vmin, 5.5rem); line-height: 1; margin-bottom: 1.4vmin; filter: drop-shadow(0 6px 20px rgba(0,0,0,0.5)); }
+.k-role { font: 600 clamp(.85rem, 2vmin, 1.3rem) var(--sans); letter-spacing: .2em; text-transform: uppercase; color: var(--azure-bright); }
+.k-name { font: 800 clamp(1.8rem, 5.2vmin, 3.8rem) var(--serif); color: var(--offwhite); margin: .22em 0 .12em; line-height: 1.08; }
+.k-title { font: 400 clamp(1rem, 2.3vmin, 1.5rem) var(--sans); color: rgba(246,241,231,0.72); max-width: 52ch; }
+
+.tso { justify-content: center; gap: 1vmin; }
+.tso-head { text-align: center; margin-bottom: 3.4vmin; }
+.tso-winners { display: flex; flex-wrap: wrap; justify-content: center; gap: 2vmin 2.4vmin; width: 100%; max-width: 1300px; }
+.tso-winner {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+  min-width: 210px; padding: 2vmin 2.6vmin; border-radius: 14px;
+  border: 1px solid rgba(241,200,75,0.32); background: linear-gradient(160deg, rgba(241,200,75,0.10), rgba(241,200,75,0.03));
+  box-shadow: 0 12px 34px rgba(0,0,0,0.35); opacity: 0; animation: cardIn .6s ease both;
+}
+.tw-name { font: 700 clamp(1.15rem, 2.8vmin, 2rem) var(--serif); color: var(--offwhite); }
+.tw-prog { font: 500 clamp(.82rem, 1.7vmin, 1.15rem) var(--sans); color: rgba(246,241,231,0.62); margin-top: .5vmin; }
+.tso-reps { margin-top: 4vmin; font: 500 clamp(.9rem, 2vmin, 1.3rem) var(--sans); color: rgba(246,241,231,0.7); }
+
+/* Mezunlar Kütüğüne Plaket Çakma */
+.kutuk { gap: 1vmin; }
+.kutuk-eyebrow { font: 600 clamp(.9rem, 2.1vmin, 1.35rem) var(--sans); letter-spacing: .28em; text-transform: uppercase; color: var(--gold-2); animation: fadeUp .6s ease both; }
+.kutuk-title { font: 800 clamp(1.9rem, 5.4vmin, 4rem) var(--serif); color: var(--cream); margin: .3em 0 0; line-height: 1.1; filter: drop-shadow(0 4px 22px rgba(0,0,0,0.45)); }
+.kutuk-caker { display: flex; flex-direction: column; align-items: center; margin-top: 2vmin; animation: cardIn .7s cubic-bezier(.2,.7,.2,1) both; }
+.kc-badge { font-size: clamp(2.4rem, 7vmin, 4.6rem); line-height: 1; filter: drop-shadow(0 0 18px rgba(241,200,75,0.5)); }
+.kc-name { font: 800 clamp(1.8rem, 5vmin, 3.6rem) var(--serif); color: var(--gold-2); margin: .18em 0 .1em; text-shadow: 0 2px 20px rgba(241,200,75,0.3); }
+.kc-role { font: 500 clamp(.95rem, 2.1vmin, 1.35rem) var(--sans); color: rgba(246,241,231,0.75); }
+.kutuk-eslik { margin-top: 3.4vmin; text-align: center; }
+.ke-label { font: 600 clamp(.8rem, 1.8vmin, 1.1rem) var(--sans); letter-spacing: .18em; text-transform: uppercase; color: var(--azure-bright); margin-bottom: 1vmin; }
+.ke-names { display: flex; flex-wrap: wrap; justify-content: center; gap: 1vmin 2.4vmin; }
+.ke-names span { font: 600 clamp(1.05rem, 2.4vmin, 1.6rem) var(--serif); color: var(--offwhite); }
+
+/* Dereceler — takdim edenler (alt satır) */
+.honors-presenters { position: absolute; bottom: 3vmin; left: 0; right: 0; z-index: 4; text-align: center;
+  padding: 0 4vmin; font: 500 clamp(.82rem, 1.7vmin, 1.15rem) var(--sans); color: rgba(246,241,231,0.6); line-height: 1.4; }
+.honors-presenters span { color: var(--azure-bright); font-weight: 700; letter-spacing: .04em; }
+
+/* Takdim — belgeleri takdim eden hocalar (başlık altı) */
+.takdim-faculty { position: relative; z-index: 2; max-width: 1150px; margin: -0.3vmin 0 1.4vmin; padding: 0 2vmin;
+  font: 500 clamp(.76rem, 1.55vmin, 1.05rem) var(--sans); color: rgba(246,241,231,0.58); line-height: 1.4; }
+.takdim-faculty span { color: var(--azure-bright); font-weight: 700; }
 @keyframes gradIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 /* isimler soldan akarak gelir */
 @keyframes gradInLeft { from { opacity: 0; transform: translateX(-16px); } to { opacity: 1; transform: translateX(0); } }

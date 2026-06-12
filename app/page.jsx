@@ -10,6 +10,7 @@ import ProcessionScreen from "@/components/ProcessionScreen";
 import SaygiScreen from "@/components/SaygiScreen";
 import KonusmaScreen from "@/components/KonusmaScreen";
 import HonorsScreen from "@/components/HonorsScreen";
+import KutukScreen from "@/components/KutukScreen";
 import TsoScreen from "@/components/TsoScreen";
 import TakdimScreen from "@/components/TakdimScreen";
 import ClosingScreen from "@/components/ClosingScreen";
@@ -21,6 +22,11 @@ import AgendaOverlay from "@/components/AgendaOverlay";
 
 const N = ACTIVE_PROGRAMS.length;   // yürüyüş: program sayısı
 const ND = HONORS.length;           // dereceler: bölüm/grup sayısı
+const NK = SPEAKERS.length;         // konuşmalar: konuşmacı sayısı
+
+// Ekran sırası (resmî tören akışı):
+// 0 Açılış · 1 Geçit · 2 Saygı/İstiklal · 3 Konuşmalar · 4 Dereceler · 5 Kütük (plaket çakma)
+// · 6 TSO · 7 Takdim · 8 Kapanış · 9 Kutlama
 
 // Bir grupta kaç slayt var: her derece ayrı slayt (3. → 2. → 1.) + en son hepsi
 // bir arada (podyum) slaytı. Beraberlikler (aynı rütbe) tek slaytta birlikte gelir.
@@ -36,6 +42,7 @@ export default function Page() {
   const [honor, setHonor] = useState(0);
   const [honorStep, setHonorStep] = useState(1); // aktif bölümde kaç derece açıldı (elle reveal)
   const [takdimIdx, setTakdimIdx] = useState(0); // Mezunlarımızın Takdimi: aktif program
+  const [konusmaIdx, setKonusmaIdx] = useState(0); // Konuşmalar: aktif konuşmacı
   const [blackout, setBlackout] = useState(false);
   const [help, setHelp] = useState(false);
   const [countdown, setCountdown] = useState(false);
@@ -47,56 +54,72 @@ export default function Page() {
   const [anthemName, setAnthemName] = useState("");
   const lastNav = useRef(0);
 
-  const stateRef = useRef({ screen, proc, honor, honorStep, takdimIdx, help, countdown, preflight, agenda });
-  stateRef.current = { screen, proc, honor, honorStep, takdimIdx, help, countdown, preflight, agenda };
+  const stateRef = useRef({ screen, proc, honor, honorStep, takdimIdx, konusmaIdx, help, countdown, preflight, agenda });
+  stateRef.current = { screen, proc, honor, honorStep, takdimIdx, konusmaIdx, help, countdown, preflight, agenda };
 
   const next = useCallback(() => {
     const s = stateRef.current;
     if (s.help) { setHelp(false); return; }
     if (s.screen === 0) setScreen(1);
-    else if (s.screen === 1) { if (s.proc < N - 1) setProc(s.proc + 1); else { setHonor(0); setHonorStep(1); setScreen(2); } }
-    else if (s.screen === 2) {
+    else if (s.screen === 1) { if (s.proc < N - 1) setProc(s.proc + 1); else setScreen(2); } // Geçit → Saygı
+    else if (s.screen === 2) { setKonusmaIdx(0); setScreen(3); } // Saygı → Konuşmalar
+    else if (s.screen === 3) { // Konuşmalar: her → bir konuşmacı; bitince Dereceler
+      if (s.konusmaIdx < NK - 1) setKonusmaIdx(s.konusmaIdx + 1);
+      else { setHonor(0); setHonorStep(1); setScreen(4); }
+    }
+    else if (s.screen === 4) {
       // Önce bölümün dereceleri tek tek açılır (3. → 2. → 1.), sonra sonraki bölüme geçilir.
       const steps = honorStepsOf(HONORS[s.honor]);
       if (s.honorStep < steps) setHonorStep(s.honorStep + 1);
       else if (s.honor < ND - 1) { setHonor(s.honor + 1); setHonorStep(1); }
-      else { setTakdimIdx(0); setScreen(3); } // Dereceler bitti → Mezunlarımızın Takdimi
+      else setScreen(5); // Dereceler bitti → Kütüğe plaket çakma
     }
-    else if (s.screen === 3) {
+    else if (s.screen === 5) setScreen(6); // Kütük → TSO
+    else if (s.screen === 6) { setTakdimIdx(0); setScreen(7); } // TSO → Mezunlarımızın Takdimi
+    else if (s.screen === 7) {
       // Takdim: program program ilerler; son programdan sonra kep atma geri sayımı → Kapanış.
       if (s.takdimIdx < N - 1) setTakdimIdx(s.takdimIdx + 1);
       else { setAutoToClosing(true); setCountdown(true); }
     }
-    else if (s.screen === 4) setScreen(5);
+    else if (s.screen === 8) setScreen(9); // Kapanış → Kutlama
   }, []);
 
   const prev = useCallback(() => {
     const s = stateRef.current;
     if (s.help) { setHelp(false); return; }
     if (s.screen === 1) { if (s.proc > 0) setProc(s.proc - 1); else setScreen(0); }
-    else if (s.screen === 2) {
+    else if (s.screen === 2) { setProc(Math.max(0, N - 1)); setScreen(1); } // Saygı → Geçit (son)
+    else if (s.screen === 3) { // Konuşmalar → önceki konuşmacı / Saygı
+      if (s.konusmaIdx > 0) setKonusmaIdx(s.konusmaIdx - 1);
+      else setScreen(2);
+    }
+    else if (s.screen === 4) {
       if (s.honorStep > 1) setHonorStep(s.honorStep - 1);
       else if (s.honor > 0) { const pi = s.honor - 1; setHonor(pi); setHonorStep(honorStepsOf(HONORS[pi])); }
-      else { setProc(Math.max(0, N - 1)); setScreen(1); }
+      else { setKonusmaIdx(NK - 1); setScreen(3); } // Dereceler başı → Konuşmalar (son)
     }
-    else if (s.screen === 3) {
+    else if (s.screen === 5) { const li = Math.max(0, ND - 1); setHonor(li); setHonorStep(honorStepsOf(HONORS[li])); setScreen(4); } // Kütük → Dereceler (son)
+    else if (s.screen === 6) setScreen(5); // TSO → Kütük
+    else if (s.screen === 7) {
       if (s.takdimIdx > 0) setTakdimIdx(s.takdimIdx - 1);
-      else { const li = Math.max(0, ND - 1); setHonor(li); setHonorStep(honorStepsOf(HONORS[li])); setScreen(2); }
+      else setScreen(6); // Takdim başı → TSO
     }
-    else if (s.screen === 4) { setTakdimIdx(Math.max(0, N - 1)); setScreen(3); }
-    else if (s.screen === 5) setScreen(4);
+    else if (s.screen === 8) { setTakdimIdx(Math.max(0, N - 1)); setScreen(7); } // Kapanış → Takdim (son)
+    else if (s.screen === 9) setScreen(8); // Kutlama → Kapanış
   }, []);
 
   const jump = useCallback((n) => {
     if (n === 1) setProc(0);
-    if (n === 2) { setHonor(0); setHonorStep(1); }
-    if (n === 3) setTakdimIdx(0);
+    if (n === 3) setKonusmaIdx(0);
+    if (n === 4) { setHonor(0); setHonorStep(1); }
+    if (n === 7) setTakdimIdx(0);
     setScreen(n);
   }, []);
 
   const jumpProc = useCallback((i) => { setProc(Math.max(0, Math.min(N - 1, i))); setScreen(1); }, []);
-  const jumpHonor = useCallback((i) => { setHonor(Math.max(0, Math.min(ND - 1, i))); setHonorStep(1); setScreen(2); }, []);
-  const jumpTakdim = useCallback((i) => { setTakdimIdx(Math.max(0, Math.min(N - 1, i))); setScreen(3); }, []);
+  const jumpKonusma = useCallback((i) => { setKonusmaIdx(Math.max(0, Math.min(NK - 1, i))); setScreen(3); }, []);
+  const jumpHonor = useCallback((i) => { setHonor(Math.max(0, Math.min(ND - 1, i))); setHonorStep(1); setScreen(4); }, []);
+  const jumpTakdim = useCallback((i) => { setTakdimIdx(Math.max(0, Math.min(N - 1, i))); setScreen(7); }, []);
 
   const navNext = useCallback(() => { const t = performance.now(); if (t - lastNav.current < 220) return; lastNav.current = t; next(); }, [next]);
   const navPrev = useCallback(() => { const t = performance.now(); if (t - lastNav.current < 220) return; lastNav.current = t; prev(); }, [prev]);
@@ -114,15 +137,17 @@ export default function Page() {
     return () => window.removeEventListener("beforeunload", onBeforeUnload);
   }, []);
 
-  // Ekran müziği: Geçit'te genel giriş müziği, Dereceler'de belge takdimi müziği,
-  // Takdim'de (temsili diploma) özel parça. Geri sayım açıkken sus (marşla çakışmasın).
+  // Ekran müziği: Geçit'te giriş müziği, Dereceler + TSO'da belge takdimi müziği,
+  // Takdim'de (temsili diploma) özel parça. Saygı (İstiklal Marşı kayıttan/dışarıdan)
+  // ve Konuşmalar SESSİZ. Geri sayım açıkken sus (marşla çakışmasın).
   // ŞİMDİLİK: Takdim müziği yalnızca Dijital Dönüşüm programında çalsın, diğerlerinde sus.
   useEffect(() => {
     let id = null;
     if (!countdown) {
       if (screen === 1) id = ACTIVE_PROGRAMS[proc]?.music || MUSIC.procession?.youtubeId;
-      else if (screen === 2) id = MUSIC.honors?.youtubeId;
-      else if (screen === 3 && ACTIVE_PROGRAMS[takdimIdx]?.slug === "dijital-donusum-elektronigi") id = MUSIC.takdim?.youtubeId;
+      else if (screen === 4 || screen === 5) id = MUSIC.honors?.youtubeId; // Dereceler + Kütük
+      else if (screen === 6) id = MUSIC.tso?.youtubeId;          // TSO = Dereceler müziği
+      else if (screen === 7 && ACTIVE_PROGRAMS[takdimIdx]?.slug === "dijital-donusum-elektronigi") id = MUSIC.takdim?.youtubeId;
     }
     if (id) playScreenMusic(id); else stopScreenMusic();
   }, [screen, proc, takdimIdx, countdown]);
@@ -154,9 +179,10 @@ export default function Page() {
       if (k === "g" || k === "G") { e.preventDefault(); setAgenda(true); return; }
       if (k === "ArrowRight" || k === " " || k === "PageDown" || k === "Enter") { e.preventDefault(); navNext(); }
       else if (k === "ArrowLeft" || k === "PageUp") { e.preventDefault(); navPrev(); }
-      else if (k.length === 1 && k >= "1" && k <= "6") { jump(parseInt(k, 10) - 1); }
+      else if (k.length === 1 && k >= "1" && k <= "9") { jump(parseInt(k, 10) - 1); }
+      else if (k === "0") jump(9); // Kutlama
       else if (k === "Home") jump(0);
-      else if (k === "End") jump(5);
+      else if (k === "End") jump(9);
       else if (k === "o" || k === "O") setControls((v) => !v);
       else if (k === "f" || k === "F") toggleFs();
       else if (k === "b" || k === "B") setBlackout((v) => !v);
@@ -172,19 +198,23 @@ export default function Page() {
     function applyHash() {
       const h = (window.location.hash || "").replace("#", "").toLowerCase();
       if (!h) return;
-      if (h.startsWith("yuruyus")) jump(1);
+      if (h.startsWith("yuruyus") || h.startsWith("gecit")) jump(1);
+      else if (h.startsWith("saygi") || h.startsWith("mars")) jump(2);
+      else if (h.startsWith("konusma")) jump(3);
       else if (h.startsWith("dereceler")) {
         const m = h.match(/(\d+)/);
         setHonor(m ? Math.max(0, Math.min(ND - 1, parseInt(m[1], 10))) : 0);
         setHonorStep(1);
-        setScreen(2);
+        setScreen(4);
       }
-      else if (h.startsWith("takdim") || h.startsWith("mezun")) jump(3);
-      else if (h.startsWith("kapanis")) jump(4);
-      else if (h.startsWith("kutlama") || h.startsWith("party")) jump(5);
+      else if (h.startsWith("kutuk") || h.startsWith("plaket")) jump(5);
+      else if (h.startsWith("tso") || h.startsWith("hediye")) jump(6);
+      else if (h.startsWith("takdim") || h.startsWith("mezun")) jump(7);
+      else if (h.startsWith("kapanis")) jump(8);
+      else if (h.startsWith("kutlama") || h.startsWith("party")) jump(9);
       else if (h.startsWith("acilis") || h.startsWith("intro")) jump(0);
       else if (h.startsWith("kontrol") || h.startsWith("prova")) setPreflight(true);
-      else if (["1", "2", "3", "4", "5", "6"].includes(h)) jump(parseInt(h, 10) - 1);
+      else if (/^[1-9]$/.test(h)) jump(parseInt(h, 10) - 1);
     }
     applyHash();
     window.addEventListener("hashchange", applyHash);
@@ -204,10 +234,14 @@ export default function Page() {
     switch (screen) {
       case 0: return <IntroScreen key="intro" />;
       case 1: return <ProcessionScreen key="proc" program={ACTIVE_PROGRAMS[proc]} index={proc} total={N} />;
-      case 2: return <HonorsScreen key="honors" group={HONORS[honor]} index={honor} total={ND} revealStep={honorStep} />;
-      case 3: return <TakdimScreen key="takdim" program={ACTIVE_PROGRAMS[takdimIdx]} index={takdimIdx} total={N} />;
-      case 4: return <ClosingScreen key="closing" />;
-      case 5: return <PartyScreen key="party" />;
+      case 2: return <SaygiScreen key="saygi" />;
+      case 3: return <KonusmaScreen key="konusma" speaker={SPEAKERS[konusmaIdx]} index={konusmaIdx} total={NK} />;
+      case 4: return <HonorsScreen key="honors" group={HONORS[honor]} index={honor} total={ND} revealStep={honorStep} />;
+      case 5: return <KutukScreen key="kutuk" />;
+      case 6: return <TsoScreen key="tso" />;
+      case 7: return <TakdimScreen key="takdim" program={ACTIVE_PROGRAMS[takdimIdx]} index={takdimIdx} total={N} />;
+      case 8: return <ClosingScreen key="closing" />;
+      case 9: return <PartyScreen key="party" />;
       default: return null;
     }
   }
@@ -237,7 +271,7 @@ export default function Page() {
         <CountdownScreen
           from={10}
           fileOverride={anthemSrc}
-          onClose={() => { setCountdown(false); if (autoToClosing) { setAutoToClosing(false); setScreen(4); } }}
+          onClose={() => { setCountdown(false); if (autoToClosing) { setAutoToClosing(false); setScreen(8); } }}
         />
       )}
 
@@ -270,9 +304,11 @@ export default function Page() {
           proc={proc}
           honor={honor}
           takdim={takdimIdx}
+          konusma={konusmaIdx}
           onClose={() => setAgenda(false)}
           jump={jump}
           jumpProc={jumpProc}
+          jumpKonusma={jumpKonusma}
           jumpHonor={jumpHonor}
           jumpTakdim={jumpTakdim}
         />
@@ -288,7 +324,7 @@ export default function Page() {
               <tbody>
                 <tr><td><kbd>→</kbd> / <kbd>Boşluk</kbd> / tıklama</td><td>İleri</td></tr>
                 <tr><td><kbd>←</kbd></td><td>Geri</td></tr>
-                <tr><td><kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> <kbd>4</kbd> <kbd>5</kbd> <kbd>6</kbd></td><td>Açılış / Yürüyüş / Dereceler / Mezun Takdimi / Kapanış / Kutlama</td></tr>
+                <tr><td><kbd>1</kbd>…<kbd>9</kbd> <kbd>0</kbd></td><td>Açılış / Geçit / Saygı Duruşu / Konuşmalar / Dereceler / Kütük / TSO / Mezun Takdimi / Kapanış / Kutlama (<kbd>0</kbd>)</td></tr>
                 <tr><td>Dereceler ekranı</td><td>Her <kbd>→</kbd> sıradaki dereceyi ayrı slaytta gösterir (3. → 2. → 1.), en son hepsi bir arada (podyum); sonra sonraki bölüm</td></tr>
                 <tr><td>Mezunlarımızın Takdimi</td><td>Bölüm bölüm mezun adları gösterilir, özel şarkı çalar; her <kbd>→</kbd> sonraki program</td></tr>
                 <tr><td>Takdim bitince</td><td>Geri sayım + kep atma şarkısı (We Are the Champions) <b>otomatik</b> açılır; kapanınca "Yolunuz Açık Olsun"a geçer</td></tr>

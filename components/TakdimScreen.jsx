@@ -2,12 +2,14 @@
 import { motion } from "framer-motion";
 import { honorsVariants } from "@/lib/motion";
 import { GRADUATES } from "@/lib/graduates";
+import { FACULTY } from "@/lib/data";
 
 // "Mezunlarımızın Takdimi" — mezunlar sahneye çağrılırken o programın tüm adları
 // FİLM JENERİĞİ gibi alttan üste doğru, sürekli ve sinematik olarak akar.
 // Liste iki kez basılır → akış kesintisiz döner (yukarıdan çıkan alttan tekrar girer).
 export default function TakdimScreen({ program, index, total }) {
   const names = GRADUATES[program.slug] || [];
+  const faculty = FACULTY[program.slug] || [];   // belgeleri takdim eden hocalar
   // Akış süresi kişi sayısına göre (sinematik tempo). Tek tur = bir liste boyu.
   const duration = Math.max(22, Math.round(names.length * 0.9));
 
@@ -20,6 +22,10 @@ export default function TakdimScreen({ program, index, total }) {
         <div className="t-program">{program.name}</div>
         <div className="t-dept">{program.department}</div>
       </div>
+
+      {faculty.length > 0 && (
+        <div className="takdim-faculty"><span>Belgeleri takdim eden hocalar:</span> {faculty.join("  ·  ")}</div>
+      )}
 
       {names.length > 0 ? (
         <div className="credits-viewport" key={`cr-${program.slug}`}>

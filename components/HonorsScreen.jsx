@@ -80,6 +80,9 @@ export default function HonorsScreen({ group, index, total, revealStep = 1 }) {
       </div>
 
       {empty && <div className="honors-empty-note">Bu bölümün dereceleri yakında eklenecek.</div>}
+      {!empty && group.presenters?.length > 0 && (
+        <div className="honors-presenters"><span>Takdim eden:</span> {group.presenters.join("  ·  ")}</div>
+      )}
     </motion.section>
   );
 }
