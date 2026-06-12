@@ -367,16 +367,19 @@ button { font-family: inherit; cursor: pointer; }
 .honor-card.r1 { animation-name: cardInR1; }
 .honor-card.r2 { animation-name: cardInR2; }
 .honor-card.r3 { animation-name: cardInR3; }
-/* Podyum (silüetler) birlikte ve hızlı belirir; dereceler sonra → ile tek tek açılır. */
+/* Final podyum slaytında dereceler hızlı ve hafif kademeli belirir. */
 .honor-card.r3 { animation-delay: .12s; }
 .honor-card.r2 { animation-delay: .18s; }
 .honor-card.r1 { animation-delay: .24s; }
-/* Tek tek açılış: açılmamış dereceler silüet (placeholder), açılan canlanır. */
-.honor-card.masked .honor-photo-wrap img { filter: grayscale(1) brightness(.5); opacity: .5; }
-.honor-card.masked .honor-name { opacity: .3; }
-.honor-card.masked .rank-badge { opacity: .75; }
-.honor-card.revealed .honor-photo-wrap { animation: honorReveal .6s cubic-bezier(.2,.8,.2,1) both; }
-.honor-card.revealed .honor-name { animation: fadeUp .5s ease .12s both; }
+/* Solo slayt: tek büyük kart ortada, podyum kaydırması/yükseltmesi yok. */
+.honor-row.solo { padding-top: 5vmin; gap: 3vmin; }
+.honor-row.solo .honor-card,
+.honor-row.solo .honor-card.r1,
+.honor-row.solo .honor-card.r2,
+.honor-row.solo .honor-card.r3 {
+  transform: none; animation-name: cardIn; animation-delay: .05s;
+  width: clamp(300px, 46vmin, 560px);
+}
 .honors-step-hint {
   position: absolute; bottom: 4vmin; left: 0; right: 0; z-index: 4;
   font: 600 clamp(.85rem, 2vmin, 1.25rem) var(--sans); color: rgba(246,241,231,0.72);
@@ -801,7 +804,6 @@ button { font-family: inherit; cursor: pointer; }
 @keyframes schoolGlow { 0%,100% { filter: drop-shadow(0 0 22px rgba(0,144,204,0.35)); } 50% { filter: drop-shadow(0 0 38px rgba(208,34,51,0.40)); } }
 @keyframes eyebrowGlow { 0%,100% { text-shadow: 0 0 14px rgba(0,144,204,0.45); } 50% { text-shadow: 0 0 22px rgba(91,194,240,0.75); } }
 @keyframes eyebrowGlowGold { 0%,100% { text-shadow: 0 0 14px rgba(241,200,75,0.45); } 50% { text-shadow: 0 0 24px rgba(255,212,90,0.8); } }
-@keyframes honorReveal { from { opacity: 0; transform: scale(.82) rotateY(12deg); filter: blur(6px); } to { opacity: 1; transform: scale(1) rotateY(0); filter: blur(0); } }
 @keyframes hintPulse  { 0%,100% { opacity: .5; } 50% { opacity: 1; } }
 @keyframes ruleGrow   { from { width: 0; opacity: 0; } to { width: clamp(220px, 42vmin, 640px); opacity: 1; } }
 @keyframes rulePulse  { 0%,100% { box-shadow: 0 0 12px rgba(0,144,204,0.45); } 50% { box-shadow: 0 0 22px rgba(91,194,240,0.7); } }

@@ -18,11 +18,12 @@ import AgendaOverlay from "@/components/AgendaOverlay";
 const N = ACTIVE_PROGRAMS.length;   // yürüyüş: program sayısı
 const ND = HONORS.length;           // dereceler: bölüm/grup sayısı
 
-// Bir grupta kaç açılış adımı var = farklı derece (rütbe) sayısı (3. → 2. → 1.).
-// Beraberlikler (aynı rütbe) tek adımda birlikte açılır. Boş grup tek adım.
+// Bir grupta kaç slayt var: her derece ayrı slayt (3. → 2. → 1.) + en son hepsi
+// bir arada (podyum) slaytı. Beraberlikler (aynı rütbe) tek slaytta birlikte gelir.
+// Boş grup tek slayt (placeholder podyum).
 function honorStepsOf(group) {
   if (!group || !group.honors || group.honors.length === 0) return 1;
-  return new Set(group.honors.map((h) => h.rank)).size;
+  return new Set(group.honors.map((h) => h.rank)).size + 1;
 }
 
 export default function Page() {
@@ -266,7 +267,7 @@ export default function Page() {
                 <tr><td><kbd>→</kbd> / <kbd>Boşluk</kbd> / tıklama</td><td>İleri</td></tr>
                 <tr><td><kbd>←</kbd></td><td>Geri</td></tr>
                 <tr><td><kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> <kbd>4</kbd> <kbd>5</kbd></td><td>Açılış / Yürüyüş / Dereceler / Kapanış / Kutlama</td></tr>
-                <tr><td>Dereceler ekranı</td><td>Her <kbd>→</kbd> sıradaki dereceyi açar (3. → 2. → 1.); hepsi açılınca sonraki bölüme geçer</td></tr>
+                <tr><td>Dereceler ekranı</td><td>Her <kbd>→</kbd> sıradaki dereceyi ayrı slaytta gösterir (3. → 2. → 1.), en son hepsi bir arada (podyum); sonra sonraki bölüm</td></tr>
                 <tr><td>Dereceler bitince</td><td>Geri sayım + kep atma şarkısı (We Are the Champions) <b>otomatik</b> açılır; kapanınca "Yolunuz Açık Olsun"a geçer</td></tr>
                 <tr><td><kbd>C</kbd></td><td>Geri sayımı elle başlat (yedek)</td></tr>
                 <tr><td><kbd>M</kbd></td><td>Geri sayım sırasında şarkıyı sustur / aç</td></tr>
