@@ -602,11 +602,6 @@ button { font-family: inherit; cursor: pointer; }
 .ke-names { display: flex; flex-wrap: wrap; justify-content: center; gap: 1vmin 2.4vmin; }
 .ke-names span { font: 600 clamp(1.05rem, 2.4vmin, 1.6rem) var(--serif); color: var(--offwhite); }
 
-/* Dereceler — takdim edenler (alt satır) */
-.honors-presenters { position: absolute; bottom: 3vmin; left: 0; right: 0; z-index: 4; text-align: center;
-  padding: 0 4vmin; font: 500 clamp(.82rem, 1.7vmin, 1.15rem) var(--sans); color: rgba(246,241,231,0.6); line-height: 1.4; }
-.honors-presenters span { color: var(--azure-bright); font-weight: 700; letter-spacing: .04em; }
-
 /* Takdim — belgeleri takdim eden hocalar (başlık altı) */
 .takdim-faculty { position: relative; z-index: 2; max-width: 1150px; margin: -0.3vmin 0 1.4vmin; padding: 0 2vmin;
   font: 500 clamp(.76rem, 1.55vmin, 1.05rem) var(--sans); color: rgba(246,241,231,0.58); line-height: 1.4; }
