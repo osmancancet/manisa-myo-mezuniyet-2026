@@ -543,23 +543,24 @@ button { font-family: inherit; cursor: pointer; }
 /* İsimler soldan sağa, satır satır akar (grid → row-major). --fit ölçeği
    TakdimScreen.jsx tarafından küçültülür: yazı + sütun min-genişliği birlikte
    küçülür → daha çok sütun, daha az satır → her boyutta ekrana sığar. */
-.takdim-names {
-  position: relative; z-index: 2; width: 100%; max-width: 1760px;
-  display: grid;
-  /* Sütun min-genişliği en uzun ada (25+ harf) bir satırda yetecek kadar geniş;
-     --fit küçülünce hem font hem sütun aynı oranda küçülür → isim hep sığar, kırpılmaz. */
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, calc(330px * var(--fit, 1))), 1fr));
-  gap: calc(0.7vmin * var(--fit, 1)) calc(2.4vmin * var(--fit, 1));
-  align-content: center; justify-items: start;
-  padding: 0 2vmin; flex: 1 1 auto; min-height: 0; overflow: hidden;
+/* FİLM JENERİĞİ AKIŞI — isimler alttan üste sürekli, kesintisiz kayar.
+   İçeride liste iki kez basılır; track -50% kayınca ikinci kopya birinciyle
+   tam örtüşür → sonsuz, dikişsiz döngü. Üst/alt kenarda sinematik solma maskesi. */
+.credits-viewport {
+  position: relative; z-index: 2; width: 100%; max-width: 1000px;
+  flex: 1 1 auto; min-height: 0; overflow: hidden; padding: 0 2vmin;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 12%, #000 86%, transparent 100%);
+          mask-image: linear-gradient(180deg, transparent 0, #000 12%, #000 86%, transparent 100%);
 }
-.grad-name {
-  display: block; padding: calc(.35vmin * var(--fit, 1)) 0; max-width: 100%;
-  font: 600 calc(clamp(.85rem, 1.8vmin, 1.45rem) * var(--fit, 1)) var(--sans); color: var(--offwhite);
-  letter-spacing: .01em; text-shadow: 0 2px 14px rgba(0,0,0,0.5); line-height: 1.2;
-  opacity: 0; animation: gradInLeft .45s ease both;
+.credits-track { animation: creditsUp linear infinite; will-change: transform; }
+@keyframes creditsUp { from { transform: translateY(0); } to { transform: translateY(-50%); } }
+.credits-list { list-style: none; margin: 0; padding: 0; text-align: center; }
+.credits-list li {
+  font: 600 clamp(1.05rem, 2.5vmin, 1.85rem) var(--sans); color: var(--offwhite);
+  padding: .7vmin 0; letter-spacing: .02em; text-shadow: 0 2px 16px rgba(0,0,0,0.55);
 }
-.grad-name::before { content: "•"; color: var(--azure-bright); margin-right: .5em; opacity: .65; }
+@media (prefers-reduced-motion: reduce) { .credits-track { animation: none; } }
+.takdim-empty { position: relative; z-index: 2; margin-top: 6vmin; font: 500 clamp(1rem, 2.4vmin, 1.5rem) var(--sans); color: rgba(246,241,231,0.6); }
 .takdim-empty { position: relative; z-index: 2; margin-top: 6vmin; font: 500 clamp(1rem, 2.4vmin, 1.5rem) var(--sans); color: rgba(246,241,231,0.6); }
 @keyframes gradIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 /* isimler soldan akarak gelir */

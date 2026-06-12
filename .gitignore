@@ -14,3 +14,10 @@ npm-debug.log*
 /_statik-yedek
 /fotograflar
 Derece iletişim.pdf
+
+# müzik indirme aracı (yerel) — yt-dlp ikilisi + indirilen müzikler
+/.bin
+/Muzik-Dosyalari
+
+# Office geçici / kilit dosyaları
+~$*
