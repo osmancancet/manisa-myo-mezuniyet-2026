@@ -8,6 +8,7 @@ import Ambient from "@/components/Ambient";
 import IntroScreen from "@/components/IntroScreen";
 import ProcessionScreen from "@/components/ProcessionScreen";
 import HonorsScreen from "@/components/HonorsScreen";
+import TakdimScreen from "@/components/TakdimScreen";
 import ClosingScreen from "@/components/ClosingScreen";
 import PartyScreen from "@/components/PartyScreen";
 import CountdownScreen from "@/components/CountdownScreen";
@@ -31,6 +32,7 @@ export default function Page() {
   const [proc, setProc] = useState(0);
   const [honor, setHonor] = useState(0);
   const [honorStep, setHonorStep] = useState(1); // aktif bölümde kaç derece açıldı (elle reveal)
+  const [takdimIdx, setTakdimIdx] = useState(0); // Mezunlarımızın Takdimi: aktif program
   const [blackout, setBlackout] = useState(false);
   const [help, setHelp] = useState(false);
   const [countdown, setCountdown] = useState(false);
@@ -42,8 +44,8 @@ export default function Page() {
   const [anthemName, setAnthemName] = useState("");
   const lastNav = useRef(0);
 
-  const stateRef = useRef({ screen, proc, honor, honorStep, help, countdown, preflight, agenda });
-  stateRef.current = { screen, proc, honor, honorStep, help, countdown, preflight, agenda };
+  const stateRef = useRef({ screen, proc, honor, honorStep, takdimIdx, help, countdown, preflight, agenda });
+  stateRef.current = { screen, proc, honor, honorStep, takdimIdx, help, countdown, preflight, agenda };
 
   const next = useCallback(() => {
     const s = stateRef.current;
@@ -55,9 +57,14 @@ export default function Page() {
       const steps = honorStepsOf(HONORS[s.honor]);
       if (s.honorStep < steps) setHonorStep(s.honorStep + 1);
       else if (s.honor < ND - 1) { setHonor(s.honor + 1); setHonorStep(1); }
-      else { setAutoToClosing(true); setCountdown(true); } // Dereceler bitti → kep atma geri sayımı, sonra Kapanış
+      else { setTakdimIdx(0); setScreen(3); } // Dereceler bitti → Mezunlarımızın Takdimi
     }
-    else if (s.screen === 3) setScreen(4);
+    else if (s.screen === 3) {
+      // Takdim: program program ilerler; son programdan sonra kep atma geri sayımı → Kapanış.
+      if (s.takdimIdx < N - 1) setTakdimIdx(s.takdimIdx + 1);
+      else { setAutoToClosing(true); setCountdown(true); }
+    }
+    else if (s.screen === 4) setScreen(5);
   }, []);
 
   const prev = useCallback(() => {
@@ -69,18 +76,24 @@ export default function Page() {
       else if (s.honor > 0) { const pi = s.honor - 1; setHonor(pi); setHonorStep(honorStepsOf(HONORS[pi])); }
       else { setProc(Math.max(0, N - 1)); setScreen(1); }
     }
-    else if (s.screen === 3) { const li = Math.max(0, ND - 1); setHonor(li); setHonorStep(honorStepsOf(HONORS[li])); setScreen(2); }
-    else if (s.screen === 4) setScreen(3);
+    else if (s.screen === 3) {
+      if (s.takdimIdx > 0) setTakdimIdx(s.takdimIdx - 1);
+      else { const li = Math.max(0, ND - 1); setHonor(li); setHonorStep(honorStepsOf(HONORS[li])); setScreen(2); }
+    }
+    else if (s.screen === 4) { setTakdimIdx(Math.max(0, N - 1)); setScreen(3); }
+    else if (s.screen === 5) setScreen(4);
   }, []);
 
   const jump = useCallback((n) => {
     if (n === 1) setProc(0);
     if (n === 2) { setHonor(0); setHonorStep(1); }
+    if (n === 3) setTakdimIdx(0);
     setScreen(n);
   }, []);
 
   const jumpProc = useCallback((i) => { setProc(Math.max(0, Math.min(N - 1, i))); setScreen(1); }, []);
   const jumpHonor = useCallback((i) => { setHonor(Math.max(0, Math.min(ND - 1, i))); setHonorStep(1); setScreen(2); }, []);
+  const jumpTakdim = useCallback((i) => { setTakdimIdx(Math.max(0, Math.min(N - 1, i))); setScreen(3); }, []);
 
   const navNext = useCallback(() => { const t = performance.now(); if (t - lastNav.current < 220) return; lastNav.current = t; next(); }, [next]);
   const navPrev = useCallback(() => { const t = performance.now(); if (t - lastNav.current < 220) return; lastNav.current = t; prev(); }, [prev]);
@@ -98,13 +111,14 @@ export default function Page() {
     return () => window.removeEventListener("beforeunload", onBeforeUnload);
   }, []);
 
-  // Ekran müziği: Geçit'te programın özel parçası (yoksa genel giriş müziği),
-  // Dereceler'de belge takdimi müziği. Geri sayım açıkken sus (marşla çakışmasın).
+  // Ekran müziği: Geçit'te genel giriş müziği, Dereceler'de belge takdimi müziği,
+  // Takdim'de (temsili diploma) özel parça. Geri sayım açıkken sus (marşla çakışmasın).
   useEffect(() => {
     let id = null;
     if (!countdown) {
       if (screen === 1) id = ACTIVE_PROGRAMS[proc]?.music || MUSIC.procession?.youtubeId;
       else if (screen === 2) id = MUSIC.honors?.youtubeId;
+      else if (screen === 3) id = MUSIC.takdim?.youtubeId;
     }
     if (id) playScreenMusic(id); else stopScreenMusic();
   }, [screen, proc, countdown]);
@@ -136,9 +150,9 @@ export default function Page() {
       if (k === "g" || k === "G") { e.preventDefault(); setAgenda(true); return; }
       if (k === "ArrowRight" || k === " " || k === "PageDown" || k === "Enter") { e.preventDefault(); navNext(); }
       else if (k === "ArrowLeft" || k === "PageUp") { e.preventDefault(); navPrev(); }
-      else if (k.length === 1 && k >= "1" && k <= "5") { jump(parseInt(k, 10) - 1); }
+      else if (k.length === 1 && k >= "1" && k <= "6") { jump(parseInt(k, 10) - 1); }
       else if (k === "Home") jump(0);
-      else if (k === "End") jump(4);
+      else if (k === "End") jump(5);
       else if (k === "o" || k === "O") setControls((v) => !v);
       else if (k === "f" || k === "F") toggleFs();
       else if (k === "b" || k === "B") setBlackout((v) => !v);
@@ -161,11 +175,12 @@ export default function Page() {
         setHonorStep(1);
         setScreen(2);
       }
-      else if (h.startsWith("kapanis")) jump(3);
-      else if (h.startsWith("kutlama") || h.startsWith("party")) jump(4);
+      else if (h.startsWith("takdim") || h.startsWith("mezun")) jump(3);
+      else if (h.startsWith("kapanis")) jump(4);
+      else if (h.startsWith("kutlama") || h.startsWith("party")) jump(5);
       else if (h.startsWith("acilis") || h.startsWith("intro")) jump(0);
       else if (h.startsWith("kontrol") || h.startsWith("prova")) setPreflight(true);
-      else if (["1", "2", "3", "4", "5"].includes(h)) jump(parseInt(h, 10) - 1);
+      else if (["1", "2", "3", "4", "5", "6"].includes(h)) jump(parseInt(h, 10) - 1);
     }
     applyHash();
     window.addEventListener("hashchange", applyHash);
@@ -186,8 +201,9 @@ export default function Page() {
       case 0: return <IntroScreen key="intro" />;
       case 1: return <ProcessionScreen key="proc" program={ACTIVE_PROGRAMS[proc]} index={proc} total={N} />;
       case 2: return <HonorsScreen key="honors" group={HONORS[honor]} index={honor} total={ND} revealStep={honorStep} />;
-      case 3: return <ClosingScreen key="closing" />;
-      case 4: return <PartyScreen key="party" />;
+      case 3: return <TakdimScreen key="takdim" program={ACTIVE_PROGRAMS[takdimIdx]} index={takdimIdx} total={N} />;
+      case 4: return <ClosingScreen key="closing" />;
+      case 5: return <PartyScreen key="party" />;
       default: return null;
     }
   }
@@ -217,7 +233,7 @@ export default function Page() {
         <CountdownScreen
           from={10}
           fileOverride={anthemSrc}
-          onClose={() => { setCountdown(false); if (autoToClosing) { setAutoToClosing(false); setScreen(3); } }}
+          onClose={() => { setCountdown(false); if (autoToClosing) { setAutoToClosing(false); setScreen(4); } }}
         />
       )}
 
@@ -249,10 +265,12 @@ export default function Page() {
           screen={screen}
           proc={proc}
           honor={honor}
+          takdim={takdimIdx}
           onClose={() => setAgenda(false)}
           jump={jump}
           jumpProc={jumpProc}
           jumpHonor={jumpHonor}
+          jumpTakdim={jumpTakdim}
         />
       )}
 
@@ -266,9 +284,10 @@ export default function Page() {
               <tbody>
                 <tr><td><kbd>→</kbd> / <kbd>Boşluk</kbd> / tıklama</td><td>İleri</td></tr>
                 <tr><td><kbd>←</kbd></td><td>Geri</td></tr>
-                <tr><td><kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> <kbd>4</kbd> <kbd>5</kbd></td><td>Açılış / Yürüyüş / Dereceler / Kapanış / Kutlama</td></tr>
+                <tr><td><kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> <kbd>4</kbd> <kbd>5</kbd> <kbd>6</kbd></td><td>Açılış / Yürüyüş / Dereceler / Mezun Takdimi / Kapanış / Kutlama</td></tr>
                 <tr><td>Dereceler ekranı</td><td>Her <kbd>→</kbd> sıradaki dereceyi ayrı slaytta gösterir (3. → 2. → 1.), en son hepsi bir arada (podyum); sonra sonraki bölüm</td></tr>
-                <tr><td>Dereceler bitince</td><td>Geri sayım + kep atma şarkısı (We Are the Champions) <b>otomatik</b> açılır; kapanınca "Yolunuz Açık Olsun"a geçer</td></tr>
+                <tr><td>Mezunlarımızın Takdimi</td><td>Bölüm bölüm mezun adları gösterilir, özel şarkı çalar; her <kbd>→</kbd> sonraki program</td></tr>
+                <tr><td>Takdim bitince</td><td>Geri sayım + kep atma şarkısı (We Are the Champions) <b>otomatik</b> açılır; kapanınca "Yolunuz Açık Olsun"a geçer</td></tr>
                 <tr><td><kbd>C</kbd></td><td>Geri sayımı elle başlat (yedek)</td></tr>
                 <tr><td><kbd>M</kbd></td><td>Geri sayım sırasında şarkıyı sustur / aç</td></tr>
                 <tr><td><kbd>O</kbd></td><td>Operatör kontrol çubuğunu aç / kapat (varsayılan gizli)</td></tr>

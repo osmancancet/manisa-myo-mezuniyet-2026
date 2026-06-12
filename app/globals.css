@@ -523,6 +523,41 @@ button { font-family: inherit; cursor: pointer; }
 .closing-cta kbd { font-family: var(--sans); background: rgba(208,34,51,0.18); border: 1px solid rgba(208,34,51,0.4); border-radius: 4px; padding: 0.15em 0.5em; color: var(--gold-bright); }
 
 /* ======================================================================
+   MEZUNLARIMIZIN TAKDİMİ (temsili diploma)
+====================================================================== */
+.takdim { justify-content: flex-start; padding-top: 3.5vmin; gap: 1vmin; }
+.takdim-head { width: 100%; text-align: center; position: relative; margin-bottom: 2.2vmin; }
+.t-eyebrow {
+  font: 600 clamp(.85rem, 2vmin, 1.25rem) var(--sans); letter-spacing: .26em; text-transform: uppercase;
+  color: var(--azure-bright); animation: fadeUp .6s ease both, eyebrowGlow 3.4s ease-in-out 1s infinite;
+}
+.t-program {
+  font: 800 clamp(1.9rem, 5.6vmin, 4.2rem) var(--serif); line-height: 1.08; margin-top: .5vmin;
+  background: linear-gradient(100deg, var(--cream) 20%, #FFFFFF 50%, var(--cream) 80%); background-size: 230% 100%;
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;
+  filter: drop-shadow(0 4px 22px rgba(0,0,0,0.45));
+  animation: titleReveal .8s cubic-bezier(.2,.8,.2,1) .15s both, titleShine 6.5s ease-in-out 1s infinite;
+}
+.t-dept { font: 400 clamp(.9rem, 2.1vmin, 1.35rem) var(--sans); color: rgba(246,241,231,0.72); margin-top: .5vmin; letter-spacing: .04em; }
+
+.takdim-names {
+  position: relative; z-index: 2; width: 100%; max-width: 1720px;
+  columns: clamp(190px, 19vw, 300px); column-gap: 3vmin;
+  padding: 0 2vmin; overflow: hidden;
+}
+.takdim-names.dense { columns: clamp(150px, 15vw, 240px); column-gap: 2.2vmin; }
+.grad-name {
+  display: block; break-inside: avoid; padding: .5vmin 0;
+  font: 600 clamp(.95rem, 1.9vmin, 1.5rem) var(--sans); color: var(--offwhite);
+  letter-spacing: .01em; text-shadow: 0 2px 14px rgba(0,0,0,0.5);
+  opacity: 0; animation: gradIn .5s ease both;
+}
+.takdim-names.dense .grad-name { font-size: clamp(.82rem, 1.55vmin, 1.2rem); padding: .32vmin 0; }
+.grad-name::before { content: "•"; color: var(--azure-bright); margin-right: .5em; opacity: .65; }
+.takdim-empty { position: relative; z-index: 2; margin-top: 6vmin; font: 500 clamp(1rem, 2.4vmin, 1.5rem) var(--sans); color: rgba(246,241,231,0.6); }
+@keyframes gradIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ======================================================================
    KUTLAMA / HALAY (parti)
 ====================================================================== */
 .party { padding: 3vmin 4vmin; justify-content: flex-start; gap: 2vmin; overflow: hidden; }

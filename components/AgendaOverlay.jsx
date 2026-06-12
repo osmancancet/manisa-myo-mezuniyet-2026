@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { ACTIVE_PROGRAMS, HONORS } from "@/lib/data";
 
 // Tören akışı (run-of-show): bulunulan adım vurgulu, tıkla-git.
-export default function AgendaOverlay({ screen, proc, honor, onClose, jump, jumpProc, jumpHonor }) {
+export default function AgendaOverlay({ screen, proc, honor, takdim, onClose, jump, jumpProc, jumpHonor, jumpTakdim }) {
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === "Escape" || e.key === "g" || e.key === "G") { e.preventDefault(); e.stopPropagation(); onClose(); }
@@ -42,8 +42,17 @@ export default function AgendaOverlay({ screen, proc, honor, onClose, jump, jump
           </section>
 
           <section>
-            <h3 className={`agenda-h${screen === 3 ? " cur" : ""}`} onClick={go(() => jump(3))}>4 · Kep Atma + Yolunuz Açık Olsun</h3>
-            <h3 className={`agenda-h${screen === 4 ? " cur" : ""}`} onClick={go(() => jump(4))}>5 · Kutlama / Halay</h3>
+            <h3 className={`agenda-h${screen === 3 ? " cur" : ""}`} onClick={go(() => jumpTakdim(0))}>4 · Mezunlarımızın Takdimi</h3>
+            <ul>
+              {ACTIVE_PROGRAMS.map((p, i) => (
+                <li key={p.slug} className={screen === 3 && takdim === i ? "cur" : ""} onClick={go(() => jumpTakdim(i))}>{i + 1}. {p.name}</li>
+              ))}
+            </ul>
+          </section>
+
+          <section>
+            <h3 className={`agenda-h${screen === 4 ? " cur" : ""}`} onClick={go(() => jump(4))}>5 · Kep Atma + Yolunuz Açık Olsun</h3>
+            <h3 className={`agenda-h${screen === 5 ? " cur" : ""}`} onClick={go(() => jump(5))}>6 · Kutlama / Halay</h3>
           </section>
         </div>
         <div className="agenda-foot">Bir başlığa tıkla · <kbd>Esc</kbd> / <kbd>G</kbd> ile kapat</div>
