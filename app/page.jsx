@@ -68,13 +68,14 @@ export default function Page() {
       else { setHonor(0); setHonorStep(1); setScreen(4); }
     }
     else if (s.screen === 4) {
-      // Önce bölümün dereceleri tek tek açılır (3. → 2. → 1.), sonra sonraki bölüme geçilir.
+      // Tören sırası: Okul derecesi (honor 0) → Kütük → bölüm dereceleri (honor 1+) → TSO.
       const steps = honorStepsOf(HONORS[s.honor]);
       if (s.honorStep < steps) setHonorStep(s.honorStep + 1);
+      else if (s.honor === 0) setScreen(5);                          // Okul derecesi bitti → Kütüğe plaket çakma
       else if (s.honor < ND - 1) { setHonor(s.honor + 1); setHonorStep(1); }
-      else setScreen(5); // Dereceler bitti → Kütüğe plaket çakma
+      else setScreen(6);                                             // Son bölüm bitti → TSO
     }
-    else if (s.screen === 5) setScreen(6); // Kütük → TSO
+    else if (s.screen === 5) { setHonor(1); setHonorStep(1); setScreen(4); } // Kütük → bölüm dereceleri (ilk bölüm)
     else if (s.screen === 6) { setTakdimIdx(0); setScreen(7); } // TSO → Mezunlarımızın Takdimi
     else if (s.screen === 7) {
       // Takdim: program program ilerler; son programdan sonra kep atma geri sayımı → Kapanış.
@@ -95,11 +96,12 @@ export default function Page() {
     }
     else if (s.screen === 4) {
       if (s.honorStep > 1) setHonorStep(s.honorStep - 1);
+      else if (s.honor === 1) setScreen(5);                          // İlk bölüm başı → Kütük
       else if (s.honor > 0) { const pi = s.honor - 1; setHonor(pi); setHonorStep(honorStepsOf(HONORS[pi])); }
-      else { setKonusmaIdx(NK - 1); setScreen(3); } // Dereceler başı → Konuşmalar (son)
+      else { setKonusmaIdx(NK - 1); setScreen(3); } // Okul derecesi başı → Konuşmalar (son)
     }
-    else if (s.screen === 5) { const li = Math.max(0, ND - 1); setHonor(li); setHonorStep(honorStepsOf(HONORS[li])); setScreen(4); } // Kütük → Dereceler (son)
-    else if (s.screen === 6) setScreen(5); // TSO → Kütük
+    else if (s.screen === 5) { setHonor(0); setHonorStep(honorStepsOf(HONORS[0])); setScreen(4); } // Kütük → Okul derecesi (son adım)
+    else if (s.screen === 6) { setHonor(ND - 1); setHonorStep(honorStepsOf(HONORS[ND - 1])); setScreen(4); } // TSO → son bölüm derecesi
     else if (s.screen === 7) {
       if (s.takdimIdx > 0) setTakdimIdx(s.takdimIdx - 1);
       else setScreen(6); // Takdim başı → TSO
