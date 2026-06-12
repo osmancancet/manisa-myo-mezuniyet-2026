@@ -372,14 +372,20 @@ button { font-family: inherit; cursor: pointer; }
 .honor-card.r2 { animation-delay: .18s; }
 .honor-card.r1 { animation-delay: .24s; }
 /* Solo slayt: tek büyük kart ortada, podyum kaydırması/yükseltmesi yok. */
-.honor-row.solo { padding-top: 5vmin; gap: 3vmin; }
+.honor-row.solo { padding-top: 4vmin; gap: 3vmin; padding-bottom: 9vmin; }
 .honor-row.solo .honor-card,
 .honor-row.solo .honor-card.r1,
 .honor-row.solo .honor-card.r2,
 .honor-row.solo .honor-card.r3 {
   transform: none; animation-name: cardIn; animation-delay: .05s;
-  width: clamp(300px, 46vmin, 560px);
+  /* Tek kişi gösterilirken fotoğrafı YÜKSEKLİĞE göre sınırla: altta isim +
+     program + ipucu yazısı için yer kalsın, üst üste binmesin. */
+  width: clamp(240px, 42vh, 420px);
 }
+/* Solo'da tek kart var; beraberlik hizası gerekmez → isim/program için
+   ayrılan boş yeri kaldır, yazıları yukarı çek (alttaki ipucuna binmesin). */
+.honor-row.solo .honor-name { min-height: 0; margin-top: 1.6vmin; }
+.honor-row.solo .honor-program-tag { min-height: 0; }
 .honors-step-hint {
   position: absolute; bottom: 4vmin; left: 0; right: 0; z-index: 4;
   font: 600 clamp(.85rem, 2vmin, 1.25rem) var(--sans); color: rgba(246,241,231,0.72);

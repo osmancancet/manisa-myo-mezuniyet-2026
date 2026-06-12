@@ -1,13 +1,16 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, MotionConfig } from "framer-motion";
-import { ACTIVE_PROGRAMS, HONORS, MUSIC } from "@/lib/data";
+import { ACTIVE_PROGRAMS, HONORS, MUSIC, SPEAKERS } from "@/lib/data";
 import { preloadAnthem } from "@/lib/anthem";
 import { playScreenMusic, stopScreenMusic } from "@/lib/screenMusic";
 import Ambient from "@/components/Ambient";
 import IntroScreen from "@/components/IntroScreen";
 import ProcessionScreen from "@/components/ProcessionScreen";
+import SaygiScreen from "@/components/SaygiScreen";
+import KonusmaScreen from "@/components/KonusmaScreen";
 import HonorsScreen from "@/components/HonorsScreen";
+import TsoScreen from "@/components/TsoScreen";
 import TakdimScreen from "@/components/TakdimScreen";
 import ClosingScreen from "@/components/ClosingScreen";
 import PartyScreen from "@/components/PartyScreen";
