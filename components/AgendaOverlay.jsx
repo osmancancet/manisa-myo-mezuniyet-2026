@@ -43,18 +43,19 @@ export default function AgendaOverlay({ screen, proc, honor, takdim, konusma, on
           </section>
 
           <section>
-            <h3 className={`agenda-h${screen === 4 ? " cur" : ""}`} onClick={go(() => jumpHonor(0))}>5 · Dereceler</h3>
+            <h3 className={`agenda-h${screen === 4 && honor === 0 ? " cur" : ""}`} onClick={go(() => jumpHonor(0))}>5 · Okul Derecesi</h3>
+            <h3 className={`agenda-h${screen === 5 ? " cur" : ""}`} onClick={go(() => jump(5))}>6 · Kütüğe Plaket Çakma</h3>
+            <h3 className={`agenda-h${screen === 4 && honor > 0 ? " cur" : ""}`} onClick={go(() => jumpHonor(1))}>7 · Bölüm Dereceleri</h3>
             <ul>
-              {HONORS.map((g, i) => (
-                <li key={g.key} className={screen === 4 && honor === i ? "cur" : ""} onClick={go(() => jumpHonor(i))}>{i + 1}. {g.title}</li>
+              {HONORS.slice(1).map((g, i) => (
+                <li key={g.key} className={screen === 4 && honor === i + 1 ? "cur" : ""} onClick={go(() => jumpHonor(i + 1))}>{i + 1}. {g.title}</li>
               ))}
             </ul>
-            <h3 className={`agenda-h${screen === 5 ? " cur" : ""}`} onClick={go(() => jump(5))}>6 · Kütüğe Plaket Çakma</h3>
-            <h3 className={`agenda-h${screen === 6 ? " cur" : ""}`} onClick={go(() => jump(6))}>7 · TSO Hediye Çeki</h3>
+            <h3 className={`agenda-h${screen === 6 ? " cur" : ""}`} onClick={go(() => jump(6))}>8 · TSO Hediye Çeki</h3>
           </section>
 
           <section>
-            <h3 className={`agenda-h${screen === 7 ? " cur" : ""}`} onClick={go(() => jumpTakdim(0))}>8 · Mezunlarımızın Takdimi</h3>
+            <h3 className={`agenda-h${screen === 7 ? " cur" : ""}`} onClick={go(() => jumpTakdim(0))}>9 · Mezunlarımızın Takdimi</h3>
             <ul>
               {ACTIVE_PROGRAMS.map((p, i) => (
                 <li key={p.slug} className={screen === 7 && takdim === i ? "cur" : ""} onClick={go(() => jumpTakdim(i))}>{i + 1}. {p.name}</li>
@@ -63,8 +64,8 @@ export default function AgendaOverlay({ screen, proc, honor, takdim, konusma, on
           </section>
 
           <section>
-            <h3 className={`agenda-h${screen === 8 ? " cur" : ""}`} onClick={go(() => jump(8))}>9 · Kep Atma + Yolunuz Açık Olsun</h3>
-            <h3 className={`agenda-h${screen === 9 ? " cur" : ""}`} onClick={go(() => jump(9))}>10 · Kutlama / Halay</h3>
+            <h3 className={`agenda-h${screen === 8 ? " cur" : ""}`} onClick={go(() => jump(8))}>10 · Kep Atma + Yolunuz Açık Olsun</h3>
+            <h3 className={`agenda-h${screen === 9 ? " cur" : ""}`} onClick={go(() => jump(9))}>11 · Kutlama / Halay</h3>
           </section>
         </div>
         <div className="agenda-foot">Bir başlığa tıkla · <kbd>Esc</kbd> / <kbd>G</kbd> ile kapat</div>
