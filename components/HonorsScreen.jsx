@@ -24,10 +24,11 @@ export default function HonorsScreen({ group, index, total, revealStep = 1 }) {
   const honors = toPodium(base);
   const isSchool = group.key === "okul";
 
-  // Sıra: her derece ayrı slayt (3. → 2. → 1.), en son hepsi bir arada (podyum).
-  const ranksDesc = [...new Set(base.map((h) => h.rank))].sort((a, b) => b - a);
-  const podiumMode = empty || revealStep > ranksDesc.length;   // final: hepsi bir arada
-  const activeRank = podiumMode ? null : ranksDesc[revealStep - 1];
+  // Sıra: Okul Geneli → 1→2→3 (Birinci önce; tören anonsuyla aynı). Bölümler → 3→2→1
+  // (üçüncüden birinciye dramatik açılış). En son hepsi bir arada (podyum).
+  const ranksOrder = [...new Set(base.map((h) => h.rank))].sort((a, b) => (isSchool ? a - b : b - a));
+  const podiumMode = empty || revealStep > ranksOrder.length;   // final: hepsi bir arada
+  const activeRank = podiumMode ? null : ranksOrder[revealStep - 1];
   const visible = podiumMode ? honors : honors.filter((h) => h.rank === activeRank);
 
   useEffect(() => {
