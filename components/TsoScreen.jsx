@@ -20,8 +20,6 @@ export default function TsoScreen() {
           </div>
         ))}
       </div>
-
-      <div className="tso-reps">Hediye çeklerini takdim eden: {TSO.reps.join(" · ")}</div>
     </motion.section>
   );
 }
