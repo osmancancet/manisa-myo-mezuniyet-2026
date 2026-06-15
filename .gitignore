@@ -21,3 +21,7 @@ Derece iletişim.pdf
 
 # Office geçici / kilit dosyaları
 ~$*
+
+# zip paketleri (yerel — ses ekibine elden verilir)
+/Muzik-Dosyalari.zip
+*.zip

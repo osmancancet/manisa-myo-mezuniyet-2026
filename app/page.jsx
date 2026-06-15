@@ -140,9 +140,8 @@ export default function Page() {
   }, []);
 
   // Ekran müziği: Geçit'te giriş müziği, Dereceler + TSO'da belge takdimi müziği.
-  // Takdim'de her program kendi talep ettiği şarkıyı çalar (TAKDIM_MUSIC); talebi
-  // olmayan programda giriş müziği döner. Saygı (İstiklal Marşı kayıttan/dışarıdan)
-  // ve Konuşmalar SESSİZ. Geri sayım açıkken sus (marşla çakışmasın).
+  // Takdim'de BÖLÜM BAZLI şarkı çalar (TAKDIM_MUSIC — aynı bölümün programları aynı).
+  // Saygı (İstiklal Marşı kayıttan/dışarıdan) ve Konuşmalar SESSİZ. Geri sayım açıkken sus.
   useEffect(() => {
     let id = null;
     if (!countdown) {
