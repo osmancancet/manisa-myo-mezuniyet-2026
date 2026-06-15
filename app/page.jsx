@@ -1,7 +1,7 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, MotionConfig } from "framer-motion";
-import { ACTIVE_PROGRAMS, HONORS, MUSIC, SPEAKERS } from "@/lib/data";
+import { ACTIVE_PROGRAMS, HONORS, MUSIC, SPEAKERS, TAKDIM_MUSIC } from "@/lib/data";
 import { preloadAnthem } from "@/lib/anthem";
 import { playScreenMusic, stopScreenMusic } from "@/lib/screenMusic";
 import Ambient from "@/components/Ambient";
@@ -139,17 +139,17 @@ export default function Page() {
     return () => window.removeEventListener("beforeunload", onBeforeUnload);
   }, []);
 
-  // Ekran müziği: Geçit'te giriş müziği, Dereceler + TSO'da belge takdimi müziği,
-  // Takdim'de (temsili diploma) özel parça. Saygı (İstiklal Marşı kayıttan/dışarıdan)
+  // Ekran müziği: Geçit'te giriş müziği, Dereceler + TSO'da belge takdimi müziği.
+  // Takdim'de her program kendi talep ettiği şarkıyı çalar (TAKDIM_MUSIC); talebi
+  // olmayan programda giriş müziği döner. Saygı (İstiklal Marşı kayıttan/dışarıdan)
   // ve Konuşmalar SESSİZ. Geri sayım açıkken sus (marşla çakışmasın).
-  // ŞİMDİLİK: Takdim müziği yalnızca Dijital Dönüşüm programında çalsın, diğerlerinde sus.
   useEffect(() => {
     let id = null;
     if (!countdown) {
       if (screen === 1) id = ACTIVE_PROGRAMS[proc]?.music || MUSIC.procession?.youtubeId;
       else if (screen === 4 || screen === 5) id = MUSIC.honors?.youtubeId; // Dereceler + Kütük
       else if (screen === 6) id = MUSIC.tso?.youtubeId;          // TSO = Dereceler müziği
-      else if (screen === 7 && ACTIVE_PROGRAMS[takdimIdx]?.slug === "dijital-donusum-elektronigi") id = MUSIC.takdim?.youtubeId;
+      else if (screen === 7) id = TAKDIM_MUSIC[ACTIVE_PROGRAMS[takdimIdx]?.slug] || MUSIC.procession?.youtubeId; // program şarkısı; yoksa giriş müziği
     }
     if (id) playScreenMusic(id); else stopScreenMusic();
   }, [screen, proc, takdimIdx, countdown]);
