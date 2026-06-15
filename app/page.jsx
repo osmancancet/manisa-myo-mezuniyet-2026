@@ -150,7 +150,8 @@ export default function Page() {
       else if (screen === 6) id = MUSIC.tso?.youtubeId;          // TSO = Dereceler müziği
       else if (screen === 7) id = TAKDIM_MUSIC[ACTIVE_PROGRAMS[takdimIdx]?.slug] || MUSIC.procession?.youtubeId; // program şarkısı; yoksa giriş müziği
     }
-    if (id) playScreenMusic(id); else stopScreenMusic();
+    // Takdim'de (screen 7) her yeni programda şarkı baştan başlasın (aynı bölüm şarkısı olsa bile).
+    if (id) playScreenMusic(id, screen === 7); else stopScreenMusic();
   }, [screen, proc, takdimIdx, countdown]);
 
   // Geri sayım şarkısını önceden hazırla: oynatıcıyı kur + videoyu tampona al (cue),
